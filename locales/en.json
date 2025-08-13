@@ -1,0 +1,85 @@
+{
+  "navigation": {
+    "home": "Home",
+    "submitWaste": "Submit Waste",
+    "marketplace": "Marketplace",
+    "dashboard": "Dashboard",
+    "language": "Language",
+    "login": "Login",
+    "profile": "Profile"
+  },
+  "hero": {
+    "logo": "ChaonaNext",
+    "slogan": "Powering the Next Generation of Farmers",
+    "description": "Transform agricultural waste into valuable products while protecting our environment"
+  },
+  "sections": {
+    "problem": {
+      "number": "01",
+      "title": "The Problem",
+      "description": "Agricultural waste management is a growing challenge. Farmers struggle with disposal costs, environmental regulations, and missed opportunities to generate additional income from their byproducts.",
+      "cards": {
+        "burning": {
+          "title": "Crop Waste Burning",
+          "description": "Millions of tons of agricultural waste are burned annually, releasing harmful pollutants"
+        },
+        "pollution": {
+          "title": "Air Pollution",
+          "description": "Open burning contributes to smog, respiratory issues, and climate change"
+        },
+        "income": {
+          "title": "Lost Income",
+          "description": "Farmers miss opportunities to monetize waste that could generate additional revenue"
+        }
+      }
+    },
+    "solution": {
+      "number": "02", 
+      "title": "Our Solution",
+      "description": "ChaonaNext connects farmers with businesses that can transform agricultural waste into valuable products. Our platform creates a circular economy that benefits everyone.",
+      "subtitle": "ChaonaNext = Connect + Reuse",
+      "features": {
+        "connect": {
+          "title": "Connect",
+          "description": "Bridge the gap between farmers with waste and buyers seeking raw materials"
+        },
+        "reuse": {
+          "title": "Reuse",
+          "description": "Transform waste into valuable products through innovative upcycling solutions"
+        },
+        "track": {
+          "title": "Track Impact",
+          "description": "Monitor CO₂ savings and environmental benefits with real-time tracking"
+        }
+      }
+    },
+    "howItWorks": {
+      "number": "03",
+      "title": "How It Works",
+      "description": "Simply register your farm, list your available waste materials, and connect with buyers. Our smart matching system ensures you get the best value for your agricultural byproducts.",
+      "steps": {
+        "step1": {
+          "number": "Step 1",
+          "title": "List Your Waste",
+          "description": "Farmers easily list their agricultural waste with photos, quantity, and location"
+        },
+        "step2": {
+          "number": "Step 2",
+          "title": "Find & Evaluate",
+          "description": "Buyers browse, filter, and evaluate available waste materials for their needs"
+        },
+        "step3": {
+          "number": "Step 3",
+          "title": "Purchase & Track",
+          "description": "Complete secure transactions and track environmental impact together"
+        }
+      }
+    }
+  },
+  "cta": {
+    "title": "Ready to Transform Your Farm?",
+    "description": "Join thousands of farmers already benefiting from our platform",
+    "primaryButton": "Get Started Today",
+    "secondaryButton": "Learn More"
+  }
+}

@@ -1,31 +1,1114 @@
-import { StyleSheet } from 'react-native';
-
-import EditScreenInfo from '@/components/EditScreenInfo';
+import React, { useRef, useState, useEffect } from 'react';
+import { StyleSheet, ScrollView, TouchableOpacity, useWindowDimensions, Platform, Animated, View as RNView } from 'react-native';
 import { Text, View } from '@/components/Themed';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
+import LanguageSelector from '@/components/LanguageSelector';
 
-export default function TabOneScreen() {
+export default function HomeScreen() {
+  const { width } = useWindowDimensions();
+  const isLargeScreen = width > 768;
+  const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
+  
+  // Navigation state
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  // Animation values - all sections start visible on Android
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const heroOpacity = useRef(new Animated.Value(1)).current;
+  const section1Opacity = useRef(new Animated.Value(1)).current;
+  const section1TranslateY = useRef(new Animated.Value(0)).current;
+  const section2Opacity = useRef(new Animated.Value(Platform.OS === 'android' ? 1 : 0)).current;
+  const section2TranslateY = useRef(new Animated.Value(Platform.OS === 'android' ? 0 : 50)).current;
+  const section3Opacity = useRef(new Animated.Value(Platform.OS === 'android' ? 1 : 0)).current;
+  const section3TranslateY = useRef(new Animated.Value(Platform.OS === 'android' ? 0 : 50)).current;
+  const ctaOpacity = useRef(new Animated.Value(Platform.OS === 'android' ? 1 : 0)).current;
+  const ctaTranslateY = useRef(new Animated.Value(Platform.OS === 'android' ? 0 : 50)).current;
+
+  // Animation state trackers - Android starts with all visible
+  const [animatedSections, setAnimatedSections] = useState({
+    section1: true,
+    section2: Platform.OS === 'android',
+    section3: Platform.OS === 'android',
+    cta: Platform.OS === 'android',
+  });
+
+  useEffect(() => {
+    // Hero section starts visible, no animation needed
+  }, []);
+
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+    {
+      useNativeDriver: false,
+      listener: (event: any) => {
+        // Skip animations on Android to ensure content visibility
+        if (Platform.OS === 'android') return;
+        
+        const offsetY = event.nativeEvent.contentOffset.y;
+        
+        // Animate section 2 (Solution) - lowered trigger point
+        if (offsetY > 300 && !animatedSections.section2) {
+          setAnimatedSections(prev => ({ ...prev, section2: true }));
+          Animated.parallel([
+            Animated.timing(section2Opacity, {
+              toValue: 1,
+              duration: 800,
+              useNativeDriver: Platform.OS !== 'web',
+            }),
+            Animated.timing(section2TranslateY, {
+              toValue: 0,
+              duration: 800,
+              useNativeDriver: Platform.OS !== 'web',
+            }),
+          ]).start();
+        }
+        
+        // Animate section 3 (How it Works) - lowered trigger point
+        if (offsetY > 600 && !animatedSections.section3) {
+          setAnimatedSections(prev => ({ ...prev, section3: true }));
+          Animated.parallel([
+            Animated.timing(section3Opacity, {
+              toValue: 1,
+              duration: 800,
+              useNativeDriver: Platform.OS !== 'web',
+            }),
+            Animated.timing(section3TranslateY, {
+              toValue: 0,
+              duration: 800,
+              useNativeDriver: Platform.OS !== 'web',
+            }),
+          ]).start();
+        }
+        
+        // Animate CTA section - lowered trigger point
+        if (offsetY > 900 && !animatedSections.cta) {
+          setAnimatedSections(prev => ({ ...prev, cta: true }));
+          Animated.parallel([
+            Animated.timing(ctaOpacity, {
+              toValue: 1,
+              duration: 800,
+              useNativeDriver: Platform.OS !== 'web',
+            }),
+            Animated.timing(ctaTranslateY, {
+              toValue: 0,
+              duration: 800,
+              useNativeDriver: Platform.OS !== 'web',
+            }),
+          ]).start();
+        }
+      },
+    }
+  );
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
-    </View>
+    <RNView style={styles.screenContainer}>
+      {/* Sticky Navbar */}
+      <View style={[
+        styles.navbar, 
+        isLargeScreen && styles.navbarLarge,
+        { paddingTop: insets.top + (isLargeScreen ? 16 : 12) }
+      ]}>
+        {/* Logo */}
+        <TouchableOpacity style={styles.logoSection}>
+          <Text style={[styles.navLogo, isLargeScreen && styles.navLogoLarge]}>ChaonaNext</Text>
+        </TouchableOpacity>
+
+        {/* Navigation Links - Desktop */}
+        {isLargeScreen && (
+          <View style={styles.navLinks}>
+            <TouchableOpacity style={styles.navLink}>
+              <Text style={styles.navLinkText}>{t('navigation.home')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.navLink}>
+              <Text style={styles.navLinkText}>{t('navigation.submitWaste')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.navLink}>
+              <Text style={styles.navLinkText}>{t('navigation.marketplace')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.navLink}>
+              <Text style={styles.navLinkText}>{t('navigation.dashboard')}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {/* Right Section */}
+        {isLargeScreen && (
+          <View style={styles.navRight}>
+            {/* Language Selector */}
+            <LanguageSelector isMobile={false} />
+
+            {/* Auth Section */}
+            <TouchableOpacity 
+              style={[styles.authButton, isLargeScreen && styles.authButtonLarge]}
+              onPress={() => setIsLoggedIn(!isLoggedIn)}
+            >
+              <Text style={[styles.authText, isLargeScreen && styles.authTextLarge]}>
+                {isLoggedIn ? t('navigation.profile') : t('navigation.login')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {/* Mobile Menu Button */}
+        {!isLargeScreen && (
+          <TouchableOpacity 
+            style={styles.mobileMenuButton}
+            onPress={() => {
+              console.log('Hamburger pressed, current state:', isMobileMenuOpen);
+              setIsMobileMenuOpen(!isMobileMenuOpen);
+            }}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.mobileMenuIcon}>☰</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+
+      {/* Mobile Menu Dropdown */}
+      {!isLargeScreen && isMobileMenuOpen && (
+        <View style={styles.mobileMenu}>
+          <TouchableOpacity 
+            style={styles.mobileMenuItem}
+            onPress={() => setIsMobileMenuOpen(false)}
+          >
+            <Text style={styles.mobileMenuText}>{t('navigation.home')}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.mobileMenuItem}
+            onPress={() => setIsMobileMenuOpen(false)}
+          >
+            <Text style={styles.mobileMenuText}>{t('navigation.submitWaste')}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.mobileMenuItem}
+            onPress={() => setIsMobileMenuOpen(false)}
+          >
+            <Text style={styles.mobileMenuText}>{t('navigation.marketplace')}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.mobileMenuItem}
+            onPress={() => setIsMobileMenuOpen(false)}
+          >
+            <Text style={styles.mobileMenuText}>{t('navigation.dashboard')}</Text>
+          </TouchableOpacity>
+          
+          {/* Separator */}
+          <View style={styles.menuSeparator} />
+          
+          {/* Language Selector in Mobile Menu */}
+          <LanguageSelector 
+            isMobile={true} 
+            onLanguageChange={() => setIsMobileMenuOpen(false)}
+          />
+          
+          {/* Auth Button in Mobile Menu */}
+          <TouchableOpacity 
+            style={styles.mobileAuthButton}
+            onPress={() => {
+              setIsLoggedIn(!isLoggedIn);
+              setIsMobileMenuOpen(false);
+            }}
+          >
+            <Text style={styles.mobileAuthText}>{isLoggedIn ? t('navigation.profile') : t('navigation.login')}</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {/* Main Content */}
+      <ScrollView 
+        style={styles.container} 
+        showsVerticalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+        nestedScrollEnabled={true}
+        removeClippedSubviews={false}
+        keyboardShouldPersistTaps="handled"
+      >
+      {/* Hero Section */}
+      <Animated.View 
+        style={[
+          styles.heroSection, 
+          isLargeScreen && styles.heroSectionLarge,
+          { opacity: heroOpacity }
+        ]}
+      >
+        <View style={styles.heroContent}>
+          {/* Logo placeholder */}
+          <View style={[styles.logoContainer, isLargeScreen && styles.logoContainerLarge]}>
+            <Text style={[styles.logo, isLargeScreen && styles.logoLarge]}>{t('hero.logo')}</Text>
+          </View>
+          
+          <Text style={[styles.slogan, isLargeScreen && styles.sloganLarge]}>
+            {t('hero.slogan')}
+          </Text>
+          
+          <Text style={[styles.heroDescription, isLargeScreen && styles.heroDescriptionLarge]}>
+            {t('hero.description')}
+          </Text>
+        </View>
+      </Animated.View>
+
+      {/* Section 1: Problem */}
+      <Animated.View 
+        style={[
+          styles.section, 
+          styles.problemSection, 
+          isLargeScreen && styles.sectionLarge,
+          {
+            opacity: section1Opacity,
+          }
+        ]}
+      >
+        <View style={styles.sectionContent}>
+          <Text style={[styles.sectionNumber, isLargeScreen && styles.sectionNumberLarge]}>{t('sections.problem.number')}</Text>
+          <Text style={[styles.sectionTitle, isLargeScreen && styles.sectionTitleLarge]}>{t('sections.problem.title')}</Text>
+          
+          <View style={[styles.problemGrid, isLargeScreen && styles.problemGridLarge]}>
+            <View style={styles.problemItem}>
+              <Text style={[styles.problemIcon, isLargeScreen && styles.problemIconLarge]}>🔥</Text>
+              <Text style={[styles.problemTitle, isLargeScreen && styles.problemTitleLarge]}>{t('sections.problem.cards.burning.title')}</Text>
+              <Text style={[styles.problemText, isLargeScreen && styles.problemTextLarge]}>
+                {t('sections.problem.cards.burning.description')}
+              </Text>
+            </View>
+            
+            <View style={styles.problemItem}>
+              <Text style={[styles.problemIcon, isLargeScreen && styles.problemIconLarge]}>🌫️</Text>
+              <Text style={[styles.problemTitle, isLargeScreen && styles.problemTitleLarge]}>{t('sections.problem.cards.pollution.title')}</Text>
+              <Text style={[styles.problemText, isLargeScreen && styles.problemTextLarge]}>
+                {t('sections.problem.cards.pollution.description')}
+              </Text>
+            </View>
+            
+            <View style={styles.problemItem}>
+              <Text style={[styles.problemIcon, isLargeScreen && styles.problemIconLarge]}>💸</Text>
+              <Text style={[styles.problemTitle, isLargeScreen && styles.problemTitleLarge]}>{t('sections.problem.cards.income.title')}</Text>
+              <Text style={[styles.problemText, isLargeScreen && styles.problemTextLarge]}>
+                {t('sections.problem.cards.income.description')}
+              </Text>
+            </View>
+          </View>
+        </View>
+      </Animated.View>
+
+      {/* Section 2: Solution */}
+      <Animated.View 
+        style={[
+          styles.section, 
+          styles.solutionSection, 
+          isLargeScreen && styles.sectionLarge,
+          {
+            opacity: section2Opacity,
+            transform: [{ translateY: section2TranslateY }],
+          }
+        ]}
+      >
+        <View style={styles.sectionContent}>
+          <Text style={[styles.sectionNumber, isLargeScreen && styles.sectionNumberLarge]}>{t('sections.solution.number')}</Text>
+          <Text style={[styles.sectionTitle, isLargeScreen && styles.sectionTitleLarge]}>{t('sections.solution.title')}</Text>
+          
+          <Text style={[styles.solutionDescription, isLargeScreen && styles.solutionDescriptionLarge]}>
+            {t('sections.solution.subtitle')}
+          </Text>
+          
+          <View style={[styles.solutionFeatures, isLargeScreen && styles.solutionFeaturesLarge]}>
+            <View style={styles.featureItem}>
+              <Text style={[styles.featureIcon, isLargeScreen && styles.featureIconLarge]}>🤝</Text>
+              <Text style={[styles.featureTitle, isLargeScreen && styles.featureTitleLarge]}>{t('sections.solution.features.connect.title')}</Text>
+              <Text style={[styles.featureText, isLargeScreen && styles.featureTextLarge]}>
+                {t('sections.solution.features.connect.description')}
+              </Text>
+            </View>
+            
+            <View style={styles.featureItem}>
+              <Text style={[styles.featureIcon, isLargeScreen && styles.featureIconLarge]}>♻️</Text>
+              <Text style={[styles.featureTitle, isLargeScreen && styles.featureTitleLarge]}>{t('sections.solution.features.reuse.title')}</Text>
+              <Text style={[styles.featureText, isLargeScreen && styles.featureTextLarge]}>
+                {t('sections.solution.features.reuse.description')}
+              </Text>
+            </View>
+            
+            <View style={styles.featureItem}>
+              <Text style={[styles.featureIcon, isLargeScreen && styles.featureIconLarge]}>📊</Text>
+              <Text style={[styles.featureTitle, isLargeScreen && styles.featureTitleLarge]}>{t('sections.solution.features.track.title')}</Text>
+              <Text style={[styles.featureText, isLargeScreen && styles.featureTextLarge]}>
+                {t('sections.solution.features.track.description')}
+              </Text>
+            </View>
+          </View>
+        </View>
+      </Animated.View>
+
+      {/* Section 3: How it Works */}
+      <Animated.View 
+        style={[
+          styles.section, 
+          styles.howItWorksSection, 
+          isLargeScreen && styles.sectionLarge,
+          {
+            opacity: section3Opacity,
+            transform: [{ translateY: section3TranslateY }],
+          }
+        ]}
+      >
+        <View style={styles.sectionContent}>
+          <Text style={[styles.sectionNumber, isLargeScreen && styles.sectionNumberLarge]}>{t('sections.howItWorks.number')}</Text>
+          <Text style={[styles.sectionTitle, isLargeScreen && styles.sectionTitleLarge]}>{t('sections.howItWorks.title')}</Text>
+          
+          <View style={[styles.stepsContainer, isLargeScreen && styles.stepsContainerLarge]}>
+            <View style={styles.stepItem}>
+              <View style={[styles.stepIconContainer, isLargeScreen && styles.stepIconContainerLarge]}>
+                <Text style={[styles.stepIcon, isLargeScreen && styles.stepIconLarge]}>📝</Text>
+              </View>
+              <Text style={[styles.stepNumber, isLargeScreen && styles.stepNumberLarge]}>{t('sections.howItWorks.steps.step1.number')}</Text>
+              <Text style={[styles.stepTitle, isLargeScreen && styles.stepTitleLarge]}>{t('sections.howItWorks.steps.step1.title')}</Text>
+              <Text style={[styles.stepText, isLargeScreen && styles.stepTextLarge]}>
+                {t('sections.howItWorks.steps.step1.description')}
+              </Text>
+            </View>
+            
+            <View style={styles.stepArrow}>
+              <Text style={[styles.arrowIcon, isLargeScreen && styles.arrowIconLarge]}>
+                {isLargeScreen ? '→' : '↓'}
+              </Text>
+            </View>
+            
+            <View style={styles.stepItem}>
+              <View style={[styles.stepIconContainer, isLargeScreen && styles.stepIconContainerLarge]}>
+                <Text style={[styles.stepIcon, isLargeScreen && styles.stepIconLarge]}>🔍</Text>
+              </View>
+              <Text style={[styles.stepNumber, isLargeScreen && styles.stepNumberLarge]}>{t('sections.howItWorks.steps.step2.number')}</Text>
+              <Text style={[styles.stepTitle, isLargeScreen && styles.stepTitleLarge]}>{t('sections.howItWorks.steps.step2.title')}</Text>
+              <Text style={[styles.stepText, isLargeScreen && styles.stepTextLarge]}>
+                {t('sections.howItWorks.steps.step2.description')}
+              </Text>
+            </View>
+            
+            <View style={styles.stepArrow}>
+              <Text style={[styles.arrowIcon, isLargeScreen && styles.arrowIconLarge]}>
+                {isLargeScreen ? '→' : '↓'}
+              </Text>
+            </View>
+            
+            <View style={styles.stepItem}>
+              <View style={[styles.stepIconContainer, isLargeScreen && styles.stepIconContainerLarge]}>
+                <Text style={[styles.stepIcon, isLargeScreen && styles.stepIconLarge]}>💰</Text>
+              </View>
+              <Text style={[styles.stepNumber, isLargeScreen && styles.stepNumberLarge]}>{t('sections.howItWorks.steps.step3.number')}</Text>
+              <Text style={[styles.stepTitle, isLargeScreen && styles.stepTitleLarge]}>{t('sections.howItWorks.steps.step3.title')}</Text>
+              <Text style={[styles.stepText, isLargeScreen && styles.stepTextLarge]}>
+                {t('sections.howItWorks.steps.step3.description')}
+              </Text>
+            </View>
+          </View>
+        </View>
+      </Animated.View>
+
+      {/* CTA Section */}
+      <Animated.View 
+        style={[
+          styles.ctaSection, 
+          isLargeScreen && styles.ctaSectionLarge,
+          {
+            opacity: ctaOpacity,
+            transform: [{ translateY: ctaTranslateY }],
+          }
+        ]}
+      >
+        <View style={styles.ctaContent}>
+          <Text style={[styles.ctaTitle, isLargeScreen && styles.ctaTitleLarge]}>
+            {t('cta.title')}
+          </Text>
+          <Text style={[styles.ctaSubtitle, isLargeScreen && styles.ctaSubtitleLarge]}>
+            {t('cta.description')}
+          </Text>
+          
+          <View style={[styles.ctaButtons, isLargeScreen && styles.ctaButtonsLarge]}>
+            <TouchableOpacity style={[styles.primaryButton, isLargeScreen && styles.primaryButtonLarge]}>
+              <Text style={[styles.primaryButtonText, isLargeScreen && styles.primaryButtonTextLarge]}>
+                {t('cta.primaryButton')}
+              </Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity style={[styles.secondaryButton, isLargeScreen && styles.secondaryButtonLarge]}>
+              <Text style={[styles.secondaryButtonText, isLargeScreen && styles.secondaryButtonTextLarge]}>
+                {t('cta.secondaryButton')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Animated.View>
+
+    </ScrollView>
+    </RNView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screenContainer: {
     flex: 1,
+    backgroundColor: '#ffffff',
+  },
+  
+  // Navbar Styles
+  navbar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+    backgroundColor: '#ffffff',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(21, 128, 61, 0.1)',
+    ...(Platform.OS === 'web' ? {
+      position: 'sticky',
+      top: 0,
+      zIndex: 1000,
+      paddingTop: 12,
+    } : {
+      elevation: 4,
+      // paddingTop will be set dynamically with safe area insets
+    }),
+  },
+  navbarLarge: {
+    paddingHorizontal: 32,
+    paddingBottom: 16,
+  },
+  logoSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  navLogo: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#15803d',
+    letterSpacing: -0.5,
+  },
+  navLogoLarge: {
+    fontSize: 24,
+  },
+  navLinks: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 32,
+    flex: 1,
+    justifyContent: 'center',
+  },
+  navLink: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  navLinkText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#374151',
+  },
+  navRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: 'transparent',
+  },
+  languageToggle: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    backgroundColor: '#f0fdf4',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#15803d',
+    elevation: 0,
+    shadowOpacity: 0,
+  },
+  languageToggleLarge: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: '#f0fdf4',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#15803d',
+    elevation: 0,
+    shadowOpacity: 0,
+  },
+  languageText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#15803d',
+    textAlign: 'center',
+  },
+  languageTextLarge: {
+    fontSize: 16,
+    color: '#15803d',
+    textAlign: 'center',
+  },
+  authButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: '#15803d',
+    borderRadius: 8,
+    elevation: 0,
+    shadowOpacity: 0,
+    borderWidth: 0,
+  },
+  authButtonLarge: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: '#15803d',
+    borderRadius: 8,
+    elevation: 0,
+    shadowOpacity: 0,
+    borderWidth: 0,
+  },
+  authText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#ffffff',
+    textAlign: 'center',
+  },
+  authTextLarge: {
+    fontSize: 16,
+    color: '#ffffff',
+    textAlign: 'center',
+  },
+  mobileMenuButton: {
+    padding: 12,
+    minWidth: 44,
+    minHeight: 44,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  title: {
-    fontSize: 20,
+  mobileMenuIcon: {
+    fontSize: 24,
+    color: '#15803d',
     fontWeight: 'bold',
   },
-  separator: {
-    marginVertical: 30,
+  mobileMenu: {
+    backgroundColor: '#ffffff',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(21, 128, 61, 0.1)',
+    paddingTop: 8,
+    paddingBottom: 8,
+    ...(Platform.OS !== 'web' && {
+      elevation: 8,
+    }),
+    ...(Platform.OS === 'web' && {
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+    }),
+  },
+  mobileMenuItem: {
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(21, 128, 61, 0.05)',
+  },
+  mobileMenuText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#374151',
+  },
+  menuSeparator: {
     height: 1,
-    width: '80%',
+    backgroundColor: 'rgba(21, 128, 61, 0.2)',
+    marginVertical: 8,
+    marginHorizontal: 24,
+  },
+  mobileLanguageButton: {
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(21, 128, 61, 0.05)',
+    backgroundColor: '#f0fdf4',
+  },
+  mobileAuthButton: {
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    backgroundColor: '#15803d',
+    marginHorizontal: 24,
+    marginVertical: 8,
+    borderRadius: 8,
+  },
+  mobileAuthText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#ffffff',
+    textAlign: 'center',
+  },
+
+  container: {
+    flex: 1,
+  },
+
+  // Hero Section
+  heroSection: {
+    paddingHorizontal: 24,
+    paddingVertical: 80,
+    backgroundColor: '#f0fdf4', // Light green
+    minHeight: 600,
+    justifyContent: 'center',
+  },
+  heroSectionLarge: {
+    paddingHorizontal: 80,
+    paddingVertical: 120,
+    minHeight: 700,
+  },
+  heroContent: {
+    alignItems: 'center',
+    maxWidth: 900,
+    alignSelf: 'center',
+    paddingHorizontal: 20,
+    backgroundColor: 'transparent',
+  },
+  logoContainer: {
+    marginBottom: 24,
+    padding: 16,
+    backgroundColor: 'rgba(21, 128, 61, 0.1)', // Very subtle green tint
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(21, 128, 61, 0.2)',
+  },
+  logoContainerLarge: {
+    marginBottom: 32,
+    padding: 24,
+    borderRadius: 24,
+  },
+  logo: {
+    fontSize: 36,
+    fontWeight: '800',
+    color: '#15803d', // Forest green
+    letterSpacing: -0.5,
+  },
+  logoLarge: {
+    fontSize: 52,
+    letterSpacing: -1,
+  },
+  slogan: {
+    fontSize: 28,
+    fontWeight: '700',
+    textAlign: 'center',
+    color: '#166534', // Dark green
+    marginBottom: 20,
+    lineHeight: 36,
+    letterSpacing: -0.5,
+    paddingHorizontal: 16,
+  },
+  sloganLarge: {
+    fontSize: 42,
+    lineHeight: 52,
+    marginBottom: 28,
+    paddingHorizontal: 0,
+  },
+  heroDescription: {
+    fontSize: 18,
+    textAlign: 'center',
+    color: '#374151', // Darker gray for better readability
+    lineHeight: 28,
+    paddingHorizontal: 20,
+    maxWidth: 600,
+  },
+  heroDescriptionLarge: {
+    fontSize: 22,
+    lineHeight: 34,
+    paddingHorizontal: 0,
+  },
+
+  // Section Base Styles
+  section: {
+    paddingHorizontal: 24,
+    paddingVertical: 80,
+  },
+  sectionLarge: {
+    paddingHorizontal: 80,
+    paddingVertical: 100,
+  },
+  sectionContent: {
+    maxWidth: 1200,
+    alignSelf: 'center',
+    paddingHorizontal: 20,
+    backgroundColor: 'transparent',
+  },
+  sectionNumber: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#15803d', // Forest green
+    marginBottom: 12,
+    textAlign: 'center',
+    letterSpacing: 2,
+    textTransform: 'uppercase',
+  },
+  sectionNumberLarge: {
+    fontSize: 18,
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 32,
+    fontWeight: '800',
+    textAlign: 'center',
+    color: '#166534', // Dark green
+    marginBottom: 48,
+    lineHeight: 40,
+    letterSpacing: -0.8,
+    paddingHorizontal: 16,
+  },
+  sectionTitleLarge: {
+    fontSize: 42,
+    lineHeight: 52,
+    marginBottom: 64,
+    paddingHorizontal: 0,
+  },
+
+  // Problem Section
+  problemSection: {
+    backgroundColor: '#fef7f7', // Very light red background
+  },
+  problemGrid: {
+    gap: 40,
+    backgroundColor: 'transparent',
+  },
+  problemGridLarge: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 32,
+    backgroundColor: 'transparent',
+  },
+  problemItem: {
+    alignItems: 'center',
+    flex: 1,
+    padding: Platform.OS === 'android' ? 20 : 28,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(220, 38, 38, 0.15)',
+    backgroundColor: 'rgba(254, 242, 242, 0.8)', // Very subtle red tint
+    minHeight: Platform.OS === 'android' ? 200 : undefined,
+    maxHeight: Platform.OS === 'android' ? 250 : undefined,
+  },
+  problemIcon: {
+    fontSize: 56,
+    marginBottom: 20,
+  },
+  problemIconLarge: {
+    fontSize: 72,
+    marginBottom: 28,
+  },
+  problemTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#166534', // Dark green
+    marginBottom: 16,
+    textAlign: 'center',
+    letterSpacing: -0.3,
+  },
+  problemTitleLarge: {
+    fontSize: 24,
+    marginBottom: 20,
+  },
+  problemText: {
+    fontSize: 16,
+    color: '#374151', // Darker gray
+    textAlign: 'center',
+    lineHeight: 24,
+    paddingHorizontal: 8,
+  },
+  problemTextLarge: {
+    fontSize: 18,
+    lineHeight: 28,
+    paddingHorizontal: 0,
+  },
+
+  // Solution Section
+  solutionSection: {
+    backgroundColor: '#f0fdf4', // Light green background
+  },
+  solutionDescription: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#15803d', // Forest green
+    textAlign: 'center',
+    marginBottom: 48,
+    letterSpacing: -0.5,
+    paddingHorizontal: 20,
+  },
+  solutionDescriptionLarge: {
+    fontSize: 36,
+    marginBottom: 64,
+    paddingHorizontal: 0,
+  },
+  solutionFeatures: {
+    gap: 40,
+    backgroundColor: 'transparent',
+  },
+  solutionFeaturesLarge: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 32,
+    backgroundColor: 'transparent',
+  },
+  featureItem: {
+    alignItems: 'center',
+    flex: 1,
+    padding: Platform.OS === 'android' ? 20 : 32,
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: 'rgba(21, 128, 61, 0.2)',
+    backgroundColor: 'rgba(236, 253, 245, 0.8)', // Subtle green tint
+    minHeight: Platform.OS === 'android' ? 200 : undefined,
+    maxHeight: Platform.OS === 'android' ? 250 : undefined,
+  },
+  featureIcon: {
+    fontSize: 56,
+    marginBottom: 20,
+  },
+  featureIconLarge: {
+    fontSize: 72,
+    marginBottom: 28,
+  },
+  featureTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#166534', // Dark green
+    marginBottom: 16,
+    textAlign: 'center',
+    letterSpacing: -0.3,
+  },
+  featureTitleLarge: {
+    fontSize: 24,
+    marginBottom: 20,
+  },
+  featureText: {
+    fontSize: 16,
+    color: '#374151', // Darker gray
+    textAlign: 'center',
+    lineHeight: 24,
+    paddingHorizontal: 8,
+  },
+  featureTextLarge: {
+    fontSize: 18,
+    lineHeight: 28,
+    paddingHorizontal: 0,
+  },
+
+  // How It Works Section
+  howItWorksSection: {
+    backgroundColor: '#f6fdf9', // Very light green background
+  },
+  stepsContainer: {
+    gap: 48,
+    backgroundColor: 'transparent',
+  },
+  stepsContainerLarge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 24,
+    backgroundColor: 'transparent',
+  },
+  stepItem: {
+    alignItems: 'center',
+    flex: 1,
+    padding: Platform.OS === 'android' ? 20 : 28,
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: 'rgba(21, 128, 61, 0.15)',
+    backgroundColor: 'rgba(240, 253, 244, 0.6)', // Very subtle green tint
+    minHeight: Platform.OS === 'android' ? 250 : undefined,
+    maxHeight: Platform.OS === 'android' ? 300 : undefined,
+  },
+  stepArrow: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 24,
+    backgroundColor: 'transparent',
+  },
+  arrowIcon: {
+    fontSize: 28,
+    color: '#15803d', // Forest green
+    fontWeight: 'bold',
+  },
+  arrowIconLarge: {
+    fontSize: 36,
+  },
+  stepIconContainer: {
+    width: 88,
+    height: 88,
+    borderRadius: 44,
+    backgroundColor: '#f0fdf4', // Very light green instead of white
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
+    borderWidth: 3,
+    borderColor: '#dcfce7', // Light green border
+    ...(Platform.OS === 'web' ? {
+      boxShadow: '0 6px 16px rgba(21, 128, 61, 0.15)',
+    } : {
+      elevation: 10,
+    }),
+  },
+  stepIconContainerLarge: {
+    width: 108,
+    height: 108,
+    borderRadius: 54,
+    marginBottom: 28,
+    borderWidth: 4,
+  },
+  stepIcon: {
+    fontSize: 40,
+  },
+  stepIconLarge: {
+    fontSize: 52,
+  },
+  stepNumber: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#15803d', // Forest green
+    marginBottom: 12,
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+  },
+  stepNumberLarge: {
+    fontSize: 16,
+    marginBottom: 16,
+  },
+  stepTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#166534', // Dark green
+    marginBottom: 16,
+    textAlign: 'center',
+    letterSpacing: -0.3,
+  },
+  stepTitleLarge: {
+    fontSize: 24,
+    marginBottom: 20,
+  },
+  stepText: {
+    fontSize: 16,
+    color: '#374151', // Darker gray
+    textAlign: 'center',
+    lineHeight: 24,
+    paddingHorizontal: 8,
+  },
+  stepTextLarge: {
+    fontSize: 18,
+    lineHeight: 28,
+    paddingHorizontal: 0,
+  },
+
+  // CTA Section
+  ctaSection: {
+    backgroundColor: '#15803d', // Forest green
+    paddingHorizontal: 24,
+    paddingVertical: 80,
+  },
+  ctaSectionLarge: {
+    paddingHorizontal: 80,
+    paddingVertical: 100,
+  },
+  ctaContent: {
+    alignItems: 'center',
+    maxWidth: 900,
+    alignSelf: 'center',
+    paddingHorizontal: 20,
+    backgroundColor: 'transparent',
+  },
+  ctaTitle: {
+    fontSize: 32,
+    fontWeight: '800',
+    color: '#fff',
+    textAlign: 'center',
+    marginBottom: 20,
+    lineHeight: 40,
+    letterSpacing: -0.8,
+    paddingHorizontal: 16,
+  },
+  ctaTitleLarge: {
+    fontSize: 42,
+    lineHeight: 52,
+    marginBottom: 28,
+    paddingHorizontal: 0,
+  },
+  ctaSubtitle: {
+    fontSize: 18,
+    color: '#dcfce7', // Light green
+    textAlign: 'center',
+    marginBottom: 40,
+    lineHeight: 28,
+    paddingHorizontal: 20,
+    maxWidth: 600,
+  },
+  ctaSubtitleLarge: {
+    fontSize: 22,
+    marginBottom: 56,
+    lineHeight: 34,
+    paddingHorizontal: 0,
+  },
+  ctaButtons: {
+    gap: 20,
+    width: '100%',
+    maxWidth: 600,
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: 'transparent',
+  },
+  ctaButtonsLarge: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 28,
+  },
+  primaryButton: {
+    backgroundColor: '#dcfce7', // Light green instead of white
+    paddingVertical: 18,
+    paddingHorizontal: 36,
+    borderRadius: 12,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#15803d', // Forest green border
+    ...(Platform.OS === 'web' ? {
+      boxShadow: '0 4px 12px rgba(21, 128, 61, 0.2)',
+    } : {
+      elevation: 6,
+    }),
+  },
+  primaryButtonLarge: {
+    paddingVertical: 20,
+    paddingHorizontal: 44,
+    minWidth: 240,
+    borderRadius: 16,
+  },
+  primaryButtonText: {
+    color: '#166534', // Dark green
+    fontSize: 18,
+    fontWeight: '700',
+    letterSpacing: -0.3,
+  },
+  primaryButtonTextLarge: {
+    fontSize: 20,
+  },
+  secondaryButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)', // Semi-transparent white
+    paddingVertical: 18,
+    paddingHorizontal: 36,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#dcfce7', // Light green border instead of white
+    alignItems: 'center',
+  },
+  secondaryButtonLarge: {
+    paddingVertical: 20,
+    paddingHorizontal: 44,
+    minWidth: 240,
+    borderRadius: 16,
+    borderWidth: 3,
+    borderColor: '#dcfce7', // Light green border
+  },
+  secondaryButtonText: {
+    color: '#dcfce7', // Light green text instead of white
+    fontSize: 18,
+    fontWeight: '700',
+    letterSpacing: -0.3,
+  },
+  secondaryButtonTextLarge: {
+    fontSize: 20,
+    color: '#dcfce7', // Light green text
   },
 });
