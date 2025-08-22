@@ -3,6 +3,7 @@ import { StyleSheet, ScrollView, TouchableOpacity, useWindowDimensions, Platform
 import { Text, View } from '@/components/Themed';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'expo-router';
 import LanguageSelector from '@/components/LanguageSelector';
 
 export default function HomeScreen() {
@@ -20,19 +21,19 @@ export default function HomeScreen() {
   const heroOpacity = useRef(new Animated.Value(1)).current;
   const section1Opacity = useRef(new Animated.Value(1)).current;
   const section1TranslateY = useRef(new Animated.Value(0)).current;
-  const section2Opacity = useRef(new Animated.Value(Platform.OS === 'android' ? 1 : 0)).current;
-  const section2TranslateY = useRef(new Animated.Value(Platform.OS === 'android' ? 0 : 50)).current;
-  const section3Opacity = useRef(new Animated.Value(Platform.OS === 'android' ? 1 : 0)).current;
-  const section3TranslateY = useRef(new Animated.Value(Platform.OS === 'android' ? 0 : 50)).current;
-  const ctaOpacity = useRef(new Animated.Value(Platform.OS === 'android' ? 1 : 0)).current;
-  const ctaTranslateY = useRef(new Animated.Value(Platform.OS === 'android' ? 0 : 50)).current;
+  const section2Opacity = useRef(new Animated.Value(Platform.OS === 'web' ? 0 : 1)).current;
+  const section2TranslateY = useRef(new Animated.Value(Platform.OS === 'web' ? 50 : 0)).current;
+  const section3Opacity = useRef(new Animated.Value(Platform.OS === 'web' ? 0 : 1)).current;
+  const section3TranslateY = useRef(new Animated.Value(Platform.OS === 'web' ? 50 : 0)).current;
+  const ctaOpacity = useRef(new Animated.Value(Platform.OS === 'web' ? 0 : 1)).current;
+  const ctaTranslateY = useRef(new Animated.Value(Platform.OS === 'web' ? 50 : 0)).current;
 
-  // Animation state trackers - Android starts with all visible
+  // Animation state trackers - Mobile starts with all visible, Web has animations
   const [animatedSections, setAnimatedSections] = useState({
     section1: true,
-    section2: Platform.OS === 'android',
-    section3: Platform.OS === 'android',
-    cta: Platform.OS === 'android',
+    section2: Platform.OS !== 'web',
+    section3: Platform.OS !== 'web',
+    cta: Platform.OS !== 'web',
   });
 
   useEffect(() => {
@@ -49,8 +50,8 @@ export default function HomeScreen() {
         
         const offsetY = event.nativeEvent.contentOffset.y;
         
-        // Animate section 2 (Solution) - lowered trigger point
-        if (offsetY > 300 && !animatedSections.section2) {
+        // Animate section 2 (Solution) - only for web
+        if (Platform.OS === 'web' && offsetY > 300 && !animatedSections.section2) {
           setAnimatedSections(prev => ({ ...prev, section2: true }));
           Animated.parallel([
             Animated.timing(section2Opacity, {
@@ -66,8 +67,8 @@ export default function HomeScreen() {
           ]).start();
         }
         
-        // Animate section 3 (How it Works) - lowered trigger point
-        if (offsetY > 600 && !animatedSections.section3) {
+        // Animate section 3 (How it Works) - only for web
+        if (Platform.OS === 'web' && offsetY > 600 && !animatedSections.section3) {
           setAnimatedSections(prev => ({ ...prev, section3: true }));
           Animated.parallel([
             Animated.timing(section3Opacity, {
@@ -83,8 +84,8 @@ export default function HomeScreen() {
           ]).start();
         }
         
-        // Animate CTA section - lowered trigger point
-        if (offsetY > 900 && !animatedSections.cta) {
+        // Animate CTA section - only for web
+        if (Platform.OS === 'web' && offsetY > 400 && !animatedSections.cta) {
           setAnimatedSections(prev => ({ ...prev, cta: true }));
           Animated.parallel([
             Animated.timing(ctaOpacity, {
@@ -120,14 +121,18 @@ export default function HomeScreen() {
         {isLargeScreen && (
           <View style={styles.navLinks}>
             <TouchableOpacity style={styles.navLink}>
-              <Text style={styles.navLinkText}>{t('navigation.home')}</Text>
+              <Text style={[styles.navLinkText, styles.navLinkActive]}>{t('navigation.home')}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.navLink}>
-              <Text style={styles.navLinkText}>{t('navigation.submitWaste')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.navLink}>
-              <Text style={styles.navLinkText}>{t('navigation.marketplace')}</Text>
-            </TouchableOpacity>
+            <Link href="./submit-waste" asChild>
+              <TouchableOpacity style={styles.navLink}>
+                <Text style={styles.navLinkText}>{t('navigation.submitWaste')}</Text>
+              </TouchableOpacity>
+            </Link>
+            <Link href="./marketplace" asChild>
+              <TouchableOpacity style={styles.navLink}>
+                <Text style={styles.navLinkText}>{t('navigation.marketplace')}</Text>
+              </TouchableOpacity>
+            </Link>
             <TouchableOpacity style={styles.navLink}>
               <Text style={styles.navLinkText}>{t('navigation.dashboard')}</Text>
             </TouchableOpacity>
@@ -174,20 +179,24 @@ export default function HomeScreen() {
             style={styles.mobileMenuItem}
             onPress={() => setIsMobileMenuOpen(false)}
           >
-            <Text style={styles.mobileMenuText}>{t('navigation.home')}</Text>
+            <Text style={[styles.mobileMenuText, styles.mobileMenuActive]}>{t('navigation.home')}</Text>
           </TouchableOpacity>
-          <TouchableOpacity 
-            style={styles.mobileMenuItem}
-            onPress={() => setIsMobileMenuOpen(false)}
-          >
-            <Text style={styles.mobileMenuText}>{t('navigation.submitWaste')}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={styles.mobileMenuItem}
-            onPress={() => setIsMobileMenuOpen(false)}
-          >
-            <Text style={styles.mobileMenuText}>{t('navigation.marketplace')}</Text>
-          </TouchableOpacity>
+          <Link href="./submit-waste" asChild>
+            <TouchableOpacity 
+              style={styles.mobileMenuItem}
+              onPress={() => setIsMobileMenuOpen(false)}
+            >
+              <Text style={styles.mobileMenuText}>{t('navigation.submitWaste')}</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="./marketplace" asChild>
+            <TouchableOpacity 
+              style={styles.mobileMenuItem}
+              onPress={() => setIsMobileMenuOpen(false)}
+            >
+              <Text style={styles.mobileMenuText}>{t('navigation.marketplace')}</Text>
+            </TouchableOpacity>
+          </Link>
           <TouchableOpacity 
             style={styles.mobileMenuItem}
             onPress={() => setIsMobileMenuOpen(false)}
@@ -220,6 +229,7 @@ export default function HomeScreen() {
       {/* Main Content */}
       <ScrollView 
         style={styles.container} 
+        contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
         scrollEventThrottle={16}
@@ -408,14 +418,10 @@ export default function HomeScreen() {
       </Animated.View>
 
       {/* CTA Section */}
-      <Animated.View 
+      <View 
         style={[
           styles.ctaSection, 
           isLargeScreen && styles.ctaSectionLarge,
-          {
-            opacity: ctaOpacity,
-            transform: [{ translateY: ctaTranslateY }],
-          }
         ]}
       >
         <View style={styles.ctaContent}>
@@ -440,7 +446,7 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
         </View>
-      </Animated.View>
+      </View>
 
     </ScrollView>
     </RNView>
@@ -505,6 +511,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#374151',
+  },
+  navLinkActive: {
+    color: '#15803d',
   },
   navRight: {
     flexDirection: 'row',
@@ -608,6 +617,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#374151',
   },
+  mobileMenuActive: {
+    color: '#15803d',
+  },
   menuSeparator: {
     height: 1,
     backgroundColor: 'rgba(21, 128, 61, 0.2)',
@@ -639,13 +651,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  scrollContent: {
+    paddingBottom: Platform.OS === 'ios' ? 80 : Platform.OS === 'android' ? 60 : 30, // Increased padding for mobile
+  },
 
   // Hero Section
   heroSection: {
     paddingHorizontal: 24,
-    paddingVertical: 80,
+    paddingVertical: 60, // Reduced padding
     backgroundColor: '#f0fdf4', // Light green
-    minHeight: 600,
+    minHeight: Platform.OS === 'web' ? 600 : 400, // Shorter on mobile
     justifyContent: 'center',
   },
   heroSectionLarge: {
@@ -716,7 +731,7 @@ const styles = StyleSheet.create({
   // Section Base Styles
   section: {
     paddingHorizontal: 24,
-    paddingVertical: 80,
+    paddingVertical: Platform.OS === 'web' ? 80 : 50, // Reduced padding on mobile
   },
   sectionLarge: {
     paddingHorizontal: 80,
@@ -780,8 +795,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(220, 38, 38, 0.15)',
     backgroundColor: 'rgba(254, 242, 242, 0.8)', // Very subtle red tint
-    minHeight: Platform.OS === 'android' ? 200 : undefined,
-    maxHeight: Platform.OS === 'android' ? 250 : undefined,
+    minHeight: 180, // Consistent across all platforms
+    maxHeight: 220, // Reasonable limit
   },
   problemIcon: {
     fontSize: 56,
@@ -809,6 +824,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 24,
     paddingHorizontal: 8,
+    flex: 1,
+    flexWrap: 'wrap',
+    ...(Platform.OS === 'web' ? {
+      wordWrap: 'break-word',
+      overflowWrap: 'break-word',
+    } : {}),
   },
   problemTextLarge: {
     fontSize: 18,
@@ -852,8 +873,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(21, 128, 61, 0.2)',
     backgroundColor: 'rgba(236, 253, 245, 0.8)', // Subtle green tint
-    minHeight: Platform.OS === 'android' ? 200 : undefined,
-    maxHeight: Platform.OS === 'android' ? 250 : undefined,
+    minHeight: 200, // Consistent across all platforms
+    maxHeight: 250, // Reasonable limit
   },
   featureIcon: {
     fontSize: 56,
@@ -881,6 +902,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 24,
     paddingHorizontal: 8,
+    flex: 1,
+    flexWrap: 'wrap',
+    ...(Platform.OS === 'web' ? {
+      wordWrap: 'break-word',
+      overflowWrap: 'break-word',
+    } : {}),
   },
   featureTextLarge: {
     fontSize: 18,
@@ -911,8 +938,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(21, 128, 61, 0.15)',
     backgroundColor: 'rgba(240, 253, 244, 0.6)', // Very subtle green tint
-    minHeight: Platform.OS === 'android' ? 250 : undefined,
-    maxHeight: Platform.OS === 'android' ? 300 : undefined,
+    minHeight: 220, // Consistent across all platforms
+    maxHeight: 280, // Reasonable limit
   },
   stepArrow: {
     alignItems: 'center',
@@ -987,6 +1014,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 24,
     paddingHorizontal: 8,
+    flex: 1,
+    flexWrap: 'wrap',
+    ...(Platform.OS === 'web' ? {
+      wordWrap: 'break-word',
+      overflowWrap: 'break-word',
+    } : {}),
   },
   stepTextLarge: {
     fontSize: 18,
@@ -998,7 +1031,8 @@ const styles = StyleSheet.create({
   ctaSection: {
     backgroundColor: '#15803d', // Forest green
     paddingHorizontal: 24,
-    paddingVertical: 80,
+    paddingVertical: 30, // Reduced padding to ensure CTA visibility
+    paddingBottom: 40, // Reduced bottom padding
   },
   ctaSectionLarge: {
     paddingHorizontal: 80,

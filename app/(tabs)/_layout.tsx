@@ -39,10 +39,19 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="submit-waste"
+        options={{
+          title: 'Submit Waste',
+          tabBarIcon: ({ color }) => <TabBarIcon name="recycle" color={color} />,
+          headerShown: false, // Hide the header completely
+        }}
+      />
+      <Tabs.Screen
+        name="marketplace"
         options={{
           title: 'Marketplace',
           tabBarIcon: ({ color }) => <TabBarIcon name="shopping-cart" color={color} />,
+          headerShown: false, // Hide the header completely
         }}
       />
     </Tabs>

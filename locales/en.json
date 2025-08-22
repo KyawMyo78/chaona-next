@@ -81,5 +81,81 @@
     "description": "Join thousands of farmers already benefiting from our platform",
     "primaryButton": "Get Started Today",
     "secondaryButton": "Learn More"
+  },
+  "submitWaste": {
+    "title": "Submit Your Agricultural Waste",
+    "subtitle": "Turn your agricultural waste into valuable resources and earn extra income",
+    "wasteTypes": {
+      "cropResidue": "Crop Residue",
+      "fruitVegetable": "Fruit & Vegetable Waste",
+      "packaging": "Agricultural Packaging",
+      "organic": "Organic Waste",
+      "other": "Other"
+    },
+    "form": {
+      "wasteType": "Type of Waste",
+      "quantity": "Quantity Available",
+      "quantityPlaceholder": "e.g., 500 kg",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe your waste materials, condition, and any additional details...",
+      "location": "Pickup Location",
+      "locationPlaceholder": "Your farm address or pickup location",
+      "contactInfo": "Contact Information",
+      "contactPlaceholder": "Your phone number or preferred contact method",
+      "photos": "Photos",
+      "photosSubtext": "Add up to 4 photos to help buyers understand your waste materials (optional)",
+      "addPhoto": "Add Photo",
+      "submit": "Submit Waste Listing"
+    },
+    "permissions": {
+      "title": "Permission Required",
+      "message": "We need access to your photo library to add photos to your waste listing.",
+      "cameraTitle": "Camera Permission Required",
+      "cameraMessage": "We need access to your camera to take photos of your waste materials."
+    },
+    "photo": {
+      "selectSource": "Select Photo Source",
+      "selectSourceMessage": "Choose where you'd like to get your photo from:",
+      "camera": "Take Photo",
+      "library": "Choose from Library",
+      "cancel": "Cancel"
+    }
+  },
+  "marketplace": {
+    "title": "Agricultural Marketplace",
+    "subtitle": "Discover sustainable agricultural products and waste materials ready for transformation",
+    "searchPlaceholder": "Search for products...",
+    "contact": "Contact",
+    "noResults": "No products found",
+    "tryDifferentSearch": "Try adjusting your search or filters",
+    "categories": {
+      "all": "All Categories",
+      "cropResidue": "Crop Residue",
+      "organic": "Organic Materials",
+      "packaging": "Packaging Materials",
+      "processed": "Processed Products"
+    },
+    "items": {
+      "riceHusk": {
+        "title": "Premium Rice Husk",
+        "description": "High-quality rice husk perfect for composting, animal bedding, or construction materials. Clean and dry.",
+        "price": "฿15/kg"
+      },
+      "compost": {
+        "title": "Organic Compost",
+        "description": "Rich organic compost made from agricultural waste. Perfect for soil amendment and organic farming.",
+        "price": "฿25/kg"
+      },
+      "cornStalks": {
+        "title": "Corn Stalks Bundle",
+        "description": "Fresh corn stalks suitable for animal feed, biomass fuel, or construction applications.",
+        "price": "฿8/kg"
+      },
+      "biochar": {
+        "title": "Premium Biochar",
+        "description": "High-quality biochar produced from agricultural waste. Excellent for soil improvement and carbon sequestration.",
+        "price": "฿45/kg"
+      }
+    }
   }
 }
