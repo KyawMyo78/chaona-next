@@ -14,56 +14,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { Link } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import LanguageSelector from '@/components/LanguageSelector';
-
-// Navbar component for consistency
-const Navbar = ({ isLargeScreen }: any) => {
-  const { t } = useTranslation();
-
-  return (
-    <View style={[styles.navbar, isLargeScreen && styles.navbarLarge]}>
-      <View style={styles.navContainer}>
-        {/* Logo */}
-        <Text style={[styles.navLogo, isLargeScreen && styles.navLogoLarge]}>
-          ChaonaNext
-        </Text>
-
-        {isLargeScreen ? (
-          /* Desktop Navigation */
-          <View style={styles.navLinks}>
-            <Link href="./" asChild>
-              <TouchableOpacity style={styles.navLink}>
-                <Text style={styles.navLinkText}>{t('navigation.home')}</Text>
-              </TouchableOpacity>
-            </Link>
-            <Link href="./submit-waste" asChild>
-              <TouchableOpacity style={styles.navLink}>
-                <Text style={styles.navLinkText}>{t('navigation.submitWaste')}</Text>
-              </TouchableOpacity>
-            </Link>
-            <TouchableOpacity style={styles.navLink}>
-              <Text style={[styles.navLinkText, styles.navLinkActive]}>{t('navigation.marketplace')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.navLink}>
-              <Text style={styles.navLinkText}>{t('navigation.dashboard')}</Text>
-            </TouchableOpacity>
-            
-            <LanguageSelector isMobile={false} />
-            
-            <TouchableOpacity style={styles.loginButton}>
-              <Text style={styles.loginButtonText}>{t('navigation.login')}</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          /* Mobile Navigation */
-          <TouchableOpacity style={styles.menuButton}>
-            <FontAwesome name="bars" size={24} color="#15803d" />
-          </TouchableOpacity>
-        )}
-      </View>
-    </View>
-  );
-};
+import Navbar from '@/components/Navbar';
 
 // Product Card Component
 const ProductCard = ({ product, isLargeScreen, onPress }: any) => {
@@ -140,7 +91,6 @@ const ProductCard = ({ product, isLargeScreen, onPress }: any) => {
 export default function MarketplacePage() {
   const { t } = useTranslation();
   const { width } = useWindowDimensions();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
@@ -254,55 +204,8 @@ export default function MarketplacePage() {
 
   return (
     <View style={styles.screenContainer}>
-      {/* Navbar */}
-      <Navbar 
-        isLargeScreen={isLargeScreen}
-      />
-
-      {/* Mobile Menu Modal */}
-      <Modal
-        visible={isMobileMenuOpen}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setIsMobileMenuOpen(false)}
-      >
-        <TouchableOpacity 
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => setIsMobileMenuOpen(false)}
-        >
-          <View style={styles.mobileMenu}>
-            <Link href="./" asChild>
-              <TouchableOpacity 
-                style={styles.mobileMenuItem}
-                onPress={() => setIsMobileMenuOpen(false)}
-              >
-                <Text style={styles.mobileMenuText}>{t('navigation.home')}</Text>
-              </TouchableOpacity>
-            </Link>
-            <Link href="./submit-waste" asChild>
-              <TouchableOpacity 
-                style={styles.mobileMenuItem}
-                onPress={() => setIsMobileMenuOpen(false)}
-              >
-                <Text style={styles.mobileMenuText}>{t('navigation.submitWaste')}</Text>
-              </TouchableOpacity>
-            </Link>
-            <TouchableOpacity 
-              style={styles.mobileMenuItem}
-              onPress={() => setIsMobileMenuOpen(false)}
-            >
-              <Text style={[styles.mobileMenuText, styles.mobileMenuActive]}>{t('navigation.marketplace')}</Text>
-            </TouchableOpacity>
-            
-            <View style={styles.menuSeparator} />
-            
-            <View style={styles.mobileMenuItem}>
-              <LanguageSelector isMobile={true} />
-            </View>
-          </View>
-        </TouchableOpacity>
-      </Modal>
+      {/* Shared Navbar Component */}
+      <Navbar isLargeScreen={isLargeScreen} activeTab="marketplace" />
 
       {/* Product Detail Modal */}
       <Modal
@@ -497,109 +400,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   
-  // Navbar styles (reused from index.tsx)
-  navbar: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-    ...(Platform.OS === 'web' ? { backdropFilter: 'blur(10px)' } : {}),
-    zIndex: 1000,
-    paddingTop: Platform.OS === 'ios' ? 50 : 20,
-    paddingBottom: 16,
-    paddingHorizontal: 24,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(21, 128, 61, 0.1)',
-  },
-  navbarLarge: {
-    paddingHorizontal: 40,
-  },
-  navContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  navLogo: {
-    fontSize: 20,
-    fontWeight: '800',
-    color: '#15803d',
-  },
-  navLogoLarge: {
-    fontSize: 24,
-  },
-  navLinks: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 32,
-  },
-  navLink: {
-    paddingVertical: 8,
-  },
-  navLinkText: {
-    fontSize: 16,
-    color: '#4b5563',
-    fontWeight: '500',
-  },
-  navLinkActive: {
-    color: '#15803d',
-    fontWeight: '600',
-  },
-  loginButton: {
-    backgroundColor: '#15803d',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-  },
-  loginButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  menuButton: {
-    padding: 8,
-  },
-  
-  // Mobile menu styles
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
-  },
-  mobileMenu: {
-    backgroundColor: '#ffffff',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingVertical: 24,
-    paddingHorizontal: 24,
-    maxHeight: '50%',
-  },
-  mobileMenuItem: {
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
-  },
-  mobileMenuText: {
-    fontSize: 18,
-    color: '#4b5563',
-    fontWeight: '500',
-  },
-  mobileMenuActive: {
-    color: '#15803d',
-    fontWeight: '600',
-  },
-  menuSeparator: {
-    height: 1,
-    backgroundColor: '#e5e7eb',
-    marginVertical: 16,
-  },
-  
   // Page content styles
   scrollView: {
     flex: 1,
   },
   scrollContent: {
-    paddingTop: Platform.OS === 'ios' ? 120 : 100,
+    paddingTop: 0, // Removed excessive top padding since we now use shared navbar
     paddingBottom: 40,
   },
   headerSection: {
