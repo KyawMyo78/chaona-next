@@ -41,37 +41,54 @@ ChaonaNext is a cross-platform agricultural waste marketplace application that c
 - **Icons**: FontAwesome via @expo/vector-icons
 - **Development**: Expo CLI with hot reloading
 
-## 🚀 Getting Started
+## 🚀 Quick Start & Live Demo
 
-### Prerequisites
+### 🌐 Live Application
+**Production URL**: https://chaona-next.vercel.app *(Available after Vercel deployment)*
 
+### 🛠 Local Development
+
+#### Prerequisites
 - Node.js (v16 or later)
 - npm or yarn
 - Expo CLI (`npm install -g @expo/cli`)
 
-### Installation
+#### Installation
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/KyawMyo78/chaona-next.git
+   cd chaona-next
+   ```
 
-1. Clone the repository:
-```bash
-git clone https://github.com/KyawMyo78/chaona-next.git
-cd chaona-next
-```
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-2. Install dependencies:
-```bash
-npm install
-```
+3. **Start development server**:
+   ```bash
+   npm start
+   ```
 
-3. Start the development server:
-```bash
-npm start
-```
+#### Platform Access
+- **🌐 Web**: Press `w` or visit `http://localhost:8081`
+- **📱 iOS**: Press `i` or scan QR with Camera app  
+- **🤖 Android**: Press `a` or scan QR with Expo Go app
 
-### Running on Different Platforms
+### 🚀 Deployment
+Ready for production deployment on:
+- ✅ **Vercel** (Recommended) - See `VERCEL_SETUP.md`
+- ✅ **Netlify** - Auto-configured with `netlify.toml`
+- ✅ **Expo Hosting** - For development builds
 
-- **Web**: `npm run web` or press `w` in the terminal
-- **iOS Simulator**: `npm run ios` or press `i` in the terminal
-- **Android Emulator**: `npm run android` or press `a` in the terminal
+## 📱 Platform Support
+
+| Platform | Status | Access Method |
+|----------|--------|---------------|
+| 🌐 **Web** | ✅ Live | Direct browser access |
+| 📱 **iOS** | ✅ Ready | Expo Go app |
+| 🤖 **Android** | ✅ Ready | Expo Go app |
+| 🖥 **Desktop** | 🔄 Planned | Future Electron build |
 
 ## 📱 Screenshots
 
