@@ -109,53 +109,49 @@ export default function HomeScreen() {
       {/* Sticky Navbar */}
       <View style={[
         styles.navbar, 
-        isLargeScreen && styles.navbarLarge,
-        { paddingTop: insets.top + (isLargeScreen ? 16 : 12) }
+        isLargeScreen && styles.navbarLarge
       ]}>
-        {/* Logo */}
-        <TouchableOpacity style={styles.logoSection}>
-          <Text style={[styles.navLogo, isLargeScreen && styles.navLogoLarge]}>ChaonaNext</Text>
-        </TouchableOpacity>
+        <View style={styles.navContainer}>
+          {/* Logo */}
+          <TouchableOpacity style={styles.logoSection}>
+            <Text style={[styles.navLogo, isLargeScreen && styles.navLogoLarge]}>ChaonaNext</Text>
+          </TouchableOpacity>
 
-        {/* Navigation Links - Desktop */}
-        {isLargeScreen && (
-          <View style={styles.navLinks}>
-            <TouchableOpacity style={styles.navLink}>
-              <Text style={[styles.navLinkText, styles.navLinkActive]}>{t('navigation.home')}</Text>
-            </TouchableOpacity>
-            <Link href="./submit-waste" asChild>
+          {/* Navigation Links - Desktop */}
+          {isLargeScreen && (
+            <View style={styles.navLinks}>
               <TouchableOpacity style={styles.navLink}>
-                <Text style={styles.navLinkText}>{t('navigation.submitWaste')}</Text>
+                <Text style={[styles.navLinkText, styles.navLinkActive]}>{t('navigation.home')}</Text>
               </TouchableOpacity>
-            </Link>
-            <Link href="./marketplace" asChild>
+              <Link href="./submit-waste" asChild>
+                <TouchableOpacity style={styles.navLink}>
+                  <Text style={styles.navLinkText}>{t('navigation.submitWaste')}</Text>
+                </TouchableOpacity>
+              </Link>
+              <Link href="./marketplace" asChild>
+                <TouchableOpacity style={styles.navLink}>
+                  <Text style={styles.navLinkText}>{t('navigation.marketplace')}</Text>
+                </TouchableOpacity>
+              </Link>
               <TouchableOpacity style={styles.navLink}>
-                <Text style={styles.navLinkText}>{t('navigation.marketplace')}</Text>
+                <Text style={styles.navLinkText}>{t('navigation.dashboard')}</Text>
               </TouchableOpacity>
-            </Link>
-            <TouchableOpacity style={styles.navLink}>
-              <Text style={styles.navLinkText}>{t('navigation.dashboard')}</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+              
+              {/* Language Selector */}
+              <LanguageSelector isMobile={false} />
 
-        {/* Right Section */}
-        {isLargeScreen && (
-          <View style={styles.navRight}>
-            {/* Language Selector */}
-            <LanguageSelector isMobile={false} />
-
-            {/* Auth Section */}
-            <TouchableOpacity 
-              style={[styles.authButton, isLargeScreen && styles.authButtonLarge]}
-              onPress={() => setIsLoggedIn(!isLoggedIn)}
-            >
-              <Text style={[styles.authText, isLargeScreen && styles.authTextLarge]}>
-                {isLoggedIn ? t('navigation.profile') : t('navigation.login')}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
+              {/* Auth Section */}
+              <TouchableOpacity 
+                style={[styles.authButton, isLargeScreen && styles.authButtonLarge]}
+                onPress={() => setIsLoggedIn(!isLoggedIn)}
+              >
+                <Text style={[styles.authText, isLargeScreen && styles.authTextLarge]}>
+                  {isLoggedIn ? t('navigation.profile') : t('navigation.login')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
 
         {/* Mobile Menu Button */}
         {!isLargeScreen && (
@@ -463,25 +459,28 @@ const styles = StyleSheet.create({
   navbar: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingBottom: 12,
     backgroundColor: '#ffffff',
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(21, 128, 61, 0.1)',
+    paddingTop: Platform.OS === 'ios' ? 50 : 20,
+    paddingBottom: 16,
+    paddingHorizontal: 24,
     ...(Platform.OS === 'web' ? {
       position: 'sticky',
       top: 0,
       zIndex: 1000,
-      paddingTop: 12,
     } : {
       elevation: 4,
-      // paddingTop will be set dynamically with safe area insets
     }),
   },
   navbarLarge: {
-    paddingHorizontal: 32,
-    paddingBottom: 16,
+    paddingHorizontal: 40,
+  },
+  navContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
   },
   logoSection: {
     flexDirection: 'row',
@@ -500,8 +499,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 32,
-    flex: 1,
-    justifyContent: 'center',
   },
   navLink: {
     paddingVertical: 8,
@@ -514,12 +511,6 @@ const styles = StyleSheet.create({
   },
   navLinkActive: {
     color: '#15803d',
-  },
-  navRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    backgroundColor: 'transparent',
   },
   languageToggle: {
     paddingVertical: 6,
@@ -652,7 +643,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: Platform.OS === 'ios' ? 80 : Platform.OS === 'android' ? 60 : 30, // Increased padding for mobile
+    paddingBottom: Platform.OS === 'ios' ? 80 : Platform.OS === 'android' ? 60 : 0, // Increased padding for mobile
   },
 
   // Hero Section
@@ -795,8 +786,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(220, 38, 38, 0.15)',
     backgroundColor: 'rgba(254, 242, 242, 0.8)', // Very subtle red tint
-    minHeight: 180, // Consistent across all platforms
-    maxHeight: 220, // Reasonable limit
+    minHeight: 180, // Minimum height, but can grow with content
   },
   problemIcon: {
     fontSize: 56,
@@ -873,8 +863,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(21, 128, 61, 0.2)',
     backgroundColor: 'rgba(236, 253, 245, 0.8)', // Subtle green tint
-    minHeight: 200, // Consistent across all platforms
-    maxHeight: 250, // Reasonable limit
+    minHeight: 200, // Minimum height, but can grow with content
   },
   featureIcon: {
     fontSize: 56,
@@ -938,8 +927,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(21, 128, 61, 0.15)',
     backgroundColor: 'rgba(240, 253, 244, 0.6)', // Very subtle green tint
-    minHeight: 220, // Consistent across all platforms
-    maxHeight: 280, // Reasonable limit
+    minHeight: 220, // Minimum height, but can grow with content
   },
   stepArrow: {
     alignItems: 'center',

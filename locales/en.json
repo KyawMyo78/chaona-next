@@ -105,6 +105,35 @@
       "photos": "Photos",
       "photosSubtext": "Add up to 4 photos to help buyers understand your waste materials (optional)",
       "addPhoto": "Add Photo",
+      "pricePerKg": "Price per kg (฿)",
+      "pricePerKgPlaceholder": "e.g., 15.00",
+      "condition": "Condition",
+      "conditionOptions": {
+        "new": "New",
+        "good": "Good",
+        "fair": "Fair",
+        "poor": "Poor"
+      },
+      "sellerName": "Seller Name",
+      "sellerNamePlaceholder": "Your name or business name",
+      "availableFrom": "Available From",
+      "minimumOrder": "Minimum Order",
+      "minimumOrderPlaceholder": "e.g., 50",
+      "minimumOrderUnit": "Unit",
+      "unitOptions": {
+        "kg": "kg",
+        "tons": "tons",
+        "bags": "bags",
+        "pieces": "pieces"
+      },
+      "paymentMethods": "Payment Methods",
+      "paymentMethodsSubtext": "Select all that apply",
+      "paymentOptions": {
+        "cod": "Cash on Delivery",
+        "bankTransfer": "Bank Transfer",
+        "mobilePayment": "Mobile Payment",
+        "creditCard": "Credit/Debit Card"
+      },
       "submit": "Submit Waste Listing"
     },
     "permissions": {
@@ -126,6 +155,22 @@
     "subtitle": "Discover sustainable agricultural products and waste materials ready for transformation",
     "searchPlaceholder": "Search for products...",
     "contact": "Contact",
+    "buyNow": "Buy Now",
+    "addToCart": "Add to Cart",
+    "productDetails": "Product Details",
+    "contactSeller": "Contact Seller",
+    "pricePerKg": "Price per kg",
+    "condition": "Condition",
+    "availableFrom": "Available From",
+    "minimumOrder": "Minimum Order",
+    "paymentMethods": "Payment Methods",
+    "sellerInfo": "Seller Information",
+    "location": "Location",
+    "contactInfo": "Contact Information",
+    "quantityAvailable": "Quantity Available",
+    "sellerRating": "Seller Rating",
+    "verifiedSeller": "Verified Seller",
+    "close": "Close",
     "noResults": "No products found",
     "tryDifferentSearch": "Try adjusting your search or filters",
     "categories": {
@@ -134,6 +179,30 @@
       "organic": "Organic Materials",
       "packaging": "Packaging Materials",
       "processed": "Processed Products"
+    },
+    "units": {
+      "perKg": "/kg",
+      "perTon": "/ton", 
+      "kg": "kg",
+      "tons": "tons",
+      "pieces": "pieces",
+      "bags": "bags",
+      "bundle": "bundle"
+    },
+    "locations": {
+      "bangkok": "Bangkok, Thailand",
+      "chiangMai": "Chiang Mai, Thailand", 
+      "nakhonRatchasima": "Nakhon Ratchasima, Thailand",
+      "khonKaen": "Khon Kaen, Thailand",
+      "suratThani": "Surat Thani, Thailand",
+      "krabi": "Krabi, Thailand",
+      "lampang": "Lampang, Thailand",
+      "udonThani": "Udon Thani, Thailand"
+    },
+    "timeAgo": {
+      "hoursAgo": "{{count}} hours ago",
+      "daysAgo": "{{count}} days ago", 
+      "weeksAgo": "{{count}} week ago"
     },
     "items": {
       "riceHusk": {
@@ -155,6 +224,26 @@
         "title": "Premium Biochar",
         "description": "High-quality biochar produced from agricultural waste. Excellent for soil improvement and carbon sequestration.",
         "price": "฿45/kg"
+      },
+      "coconutFiber": {
+        "title": "Coconut Fiber",
+        "description": "High-quality coconut coir fiber, perfect for soil conditioning and mulching.",
+        "price": "฿180/ton"
+      },
+      "bananaLeaves": {
+        "title": "Banana Leaves",
+        "description": "Fresh banana leaves for natural packaging and traditional food wrapping.",
+        "price": "฿25/bundle"
+      },
+      "mushroomMedium": {
+        "title": "Mushroom Growing Medium",
+        "description": "Processed agricultural waste perfect for mushroom cultivation.",
+        "price": "฿320/ton"
+      },
+      "sugarCaneBagasse": {
+        "title": "Sugar Cane Bagasse",
+        "description": "Fibrous residue from sugar cane processing, excellent for paper and biofuel.",
+        "price": "฿150/ton"
       }
     }
   }

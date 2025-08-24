@@ -16,9 +16,10 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import * as ImagePicker from 'expo-image-picker';
+import LanguageSelector from '@/components/LanguageSelector';
 
 // Navbar component for consistency
-const Navbar = ({ onLanguagePress, onMenuPress, isLargeScreen }: any) => {
+const Navbar = ({ isLargeScreen }: any) => {
   const { t } = useTranslation();
 
   return (
@@ -49,10 +50,7 @@ const Navbar = ({ onLanguagePress, onMenuPress, isLargeScreen }: any) => {
               <Text style={styles.navLinkText}>{t('navigation.dashboard')}</Text>
             </TouchableOpacity>
             
-            <TouchableOpacity style={styles.langButton} onPress={onLanguagePress}>
-              <Text style={styles.langButtonText}>{t('navigation.language')}</Text>
-              <FontAwesome name="chevron-down" size={12} color="#15803d" />
-            </TouchableOpacity>
+            <LanguageSelector isMobile={false} />
             
             <TouchableOpacity style={styles.loginButton}>
               <Text style={styles.loginButtonText}>{t('navigation.login')}</Text>
@@ -60,7 +58,7 @@ const Navbar = ({ onLanguagePress, onMenuPress, isLargeScreen }: any) => {
           </View>
         ) : (
           /* Mobile Navigation */
-          <TouchableOpacity style={styles.menuButton} onPress={onMenuPress}>
+          <TouchableOpacity style={styles.menuButton}>
             <FontAwesome name="bars" size={24} color="#15803d" />
           </TouchableOpacity>
         )}
@@ -72,14 +70,19 @@ const Navbar = ({ onLanguagePress, onMenuPress, isLargeScreen }: any) => {
 export default function SubmitWastePage() {
   const { t } = useTranslation();
   const { width } = useWindowDimensions();
-  const [isLanguageModalVisible, setIsLanguageModalVisible] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [formData, setFormData] = useState({
     wasteType: '',
     quantity: '',
+    pricePerKg: '',
+    condition: '',
     description: '',
     location: '',
     contactInfo: '',
+    sellerName: '',
+    availableFrom: '',
+    minimumOrder: '',
+    paymentMethods: [] as string[],
     photos: [] as string[], // Array to store photo URIs
   });
 
@@ -171,8 +174,6 @@ export default function SubmitWastePage() {
     <View style={styles.screenContainer}>
       {/* Navbar */}
       <Navbar 
-        onLanguagePress={() => setIsLanguageModalVisible(true)}
-        onMenuPress={() => setIsMobileMenuOpen(true)}
         isLargeScreen={isLargeScreen}
       />
 
@@ -214,45 +215,9 @@ export default function SubmitWastePage() {
             
             <View style={styles.menuSeparator} />
             
-            <TouchableOpacity 
-              style={styles.mobileMenuItem}
-              onPress={() => {
-                setIsMobileMenuOpen(false);
-                setIsLanguageModalVisible(true);
-              }}
-            >
-              <Text style={styles.mobileMenuText}>{t('navigation.language')}</Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-      </Modal>
-
-      {/* Language Modal */}
-      <Modal
-        visible={isLanguageModalVisible}
-        animationType="fade"
-        transparent={true}
-        onRequestClose={() => setIsLanguageModalVisible(false)}
-      >
-        <TouchableOpacity 
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => setIsLanguageModalVisible(false)}
-        >
-          <View style={styles.languageModal}>
-            <Text style={styles.languageTitle}>{t('navigation.language')}</Text>
-            <TouchableOpacity 
-              style={styles.languageOption}
-              onPress={() => setIsLanguageModalVisible(false)}
-            >
-              <Text style={styles.languageText}>English</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={styles.languageOption}
-              onPress={() => setIsLanguageModalVisible(false)}
-            >
-              <Text style={styles.languageText}>ไทย</Text>
-            </TouchableOpacity>
+            <View style={styles.mobileMenuItem}>
+              <LanguageSelector isMobile={true} />
+            </View>
           </View>
         </TouchableOpacity>
       </Modal>
@@ -304,6 +269,116 @@ export default function SubmitWastePage() {
               placeholder={t('submitWaste.form.quantityPlaceholder')}
               keyboardType="numeric"
             />
+          </View>
+
+          {/* Price per Kg */}
+          <View style={styles.formGroup}>
+            <Text style={styles.formLabel}>{t('submitWaste.form.pricePerKg')}</Text>
+            <TextInput
+              style={styles.textInput}
+              value={formData.pricePerKg}
+              onChangeText={(text) => setFormData({...formData, pricePerKg: text})}
+              placeholder={t('submitWaste.form.pricePerKgPlaceholder')}
+              keyboardType="numeric"
+            />
+          </View>
+
+          {/* Condition */}
+          <View style={styles.formGroup}>
+            <Text style={styles.formLabel}>{t('submitWaste.form.condition')}</Text>
+            <View style={styles.optionGrid}>
+              {[
+                { key: 'new', label: t('submitWaste.form.conditionOptions.new') },
+                { key: 'good', label: t('submitWaste.form.conditionOptions.good') },
+                { key: 'fair', label: t('submitWaste.form.conditionOptions.fair') },
+                { key: 'poor', label: t('submitWaste.form.conditionOptions.poor') },
+              ].map((condition) => (
+                <TouchableOpacity
+                  key={condition.key}
+                  style={[
+                    styles.optionButton,
+                    formData.condition === condition.key && styles.optionButtonSelected
+                  ]}
+                  onPress={() => setFormData({...formData, condition: condition.key})}
+                >
+                  <Text style={[
+                    styles.optionButtonText,
+                    formData.condition === condition.key && styles.optionButtonTextSelected
+                  ]}>
+                    {condition.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+
+          {/* Seller Name */}
+          <View style={styles.formGroup}>
+            <Text style={styles.formLabel}>{t('submitWaste.form.sellerName')}</Text>
+            <TextInput
+              style={styles.textInput}
+              value={formData.sellerName}
+              onChangeText={(text) => setFormData({...formData, sellerName: text})}
+              placeholder={t('submitWaste.form.sellerNamePlaceholder')}
+            />
+          </View>
+
+          {/* Available From */}
+          <View style={styles.formGroup}>
+            <Text style={styles.formLabel}>{t('submitWaste.form.availableFrom')}</Text>
+            <TextInput
+              style={styles.textInput}
+              value={formData.availableFrom}
+              onChangeText={(text) => setFormData({...formData, availableFrom: text})}
+              placeholder="e.g., Immediately, Next week, March 2025"
+            />
+          </View>
+
+          {/* Minimum Order */}
+          <View style={styles.formGroup}>
+            <Text style={styles.formLabel}>{t('submitWaste.form.minimumOrder')}</Text>
+            <TextInput
+              style={styles.textInput}
+              value={formData.minimumOrder}
+              onChangeText={(text) => setFormData({...formData, minimumOrder: text})}
+              placeholder={t('submitWaste.form.minimumOrderPlaceholder')}
+            />
+          </View>
+
+          {/* Payment Methods */}
+          <View style={styles.formGroup}>
+            <Text style={styles.formLabel}>{t('submitWaste.form.paymentMethods')}</Text>
+            <Text style={styles.formSubLabel}>{t('submitWaste.form.paymentMethodsSubtext')}</Text>
+            <View style={styles.checkboxContainer}>
+              {[
+                { key: 'cod', label: t('submitWaste.form.paymentOptions.cod') },
+                { key: 'bankTransfer', label: t('submitWaste.form.paymentOptions.bankTransfer') },
+                { key: 'mobilePayment', label: t('submitWaste.form.paymentOptions.mobilePayment') },
+                { key: 'creditCard', label: t('submitWaste.form.paymentOptions.creditCard') },
+              ].map((method) => (
+                <TouchableOpacity
+                  key={method.key}
+                  style={styles.checkboxItem}
+                  onPress={() => {
+                    const currentMethods = formData.paymentMethods;
+                    const newMethods = currentMethods.includes(method.key)
+                      ? currentMethods.filter(m => m !== method.key)
+                      : [...currentMethods, method.key];
+                    setFormData({...formData, paymentMethods: newMethods});
+                  }}
+                >
+                  <View style={[
+                    styles.checkbox,
+                    formData.paymentMethods.includes(method.key) && styles.checkboxSelected
+                  ]}>
+                    {formData.paymentMethods.includes(method.key) && (
+                      <FontAwesome name="check" size={12} color="#ffffff" />
+                    )}
+                  </View>
+                  <Text style={styles.checkboxLabel}>{method.label}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
 
           {/* Description */}
@@ -438,20 +513,6 @@ const styles = StyleSheet.create({
     color: '#15803d',
     fontWeight: '600',
   },
-  langButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    backgroundColor: '#f0fdf4',
-    borderRadius: 8,
-    gap: 8,
-  },
-  langButtonText: {
-    fontSize: 16,
-    color: '#15803d',
-    fontWeight: '500',
-  },
   loginButton: {
     backgroundColor: '#15803d',
     paddingVertical: 12,
@@ -499,34 +560,6 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: '#e5e7eb',
     marginVertical: 16,
-  },
-  
-  // Language modal styles
-  languageModal: {
-    backgroundColor: '#ffffff',
-    margin: 40,
-    borderRadius: 20,
-    padding: 24,
-    alignSelf: 'center',
-    minWidth: 200,
-  },
-  languageTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#15803d',
-    marginBottom: 16,
-    textAlign: 'center',
-  },
-  languageOption: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    marginVertical: 4,
-  },
-  languageText: {
-    fontSize: 16,
-    color: '#4b5563',
-    textAlign: 'center',
   },
   
   // Page content styles
@@ -706,5 +739,65 @@ const styles = StyleSheet.create({
     color: '#15803d',
     fontWeight: '600',
     textAlign: 'center',
+  },
+
+  // Option grid and buttons for condition, payment methods
+  optionGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  optionButton: {
+    backgroundColor: '#f9fafb',
+    borderWidth: 2,
+    borderColor: '#e5e7eb',
+    borderRadius: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    minWidth: Platform.OS === 'web' ? 120 : '45%',
+  },
+  optionButtonSelected: {
+    backgroundColor: '#f0fdf4',
+    borderColor: '#15803d',
+  },
+  optionButtonText: {
+    fontSize: 14,
+    color: '#6b7280',
+    fontWeight: '500',
+    textAlign: 'center',
+  },
+  optionButtonTextSelected: {
+    color: '#15803d',
+    fontWeight: '600',
+  },
+
+  // Checkbox styles for payment methods
+  checkboxContainer: {
+    gap: 12,
+  },
+  checkboxItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    backgroundColor: '#f9fafb',
+    borderWidth: 2,
+    borderColor: '#e5e7eb',
+    borderRadius: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkboxSelected: {
+    backgroundColor: '#f0fdf4',
+    borderColor: '#15803d',
+  },
+  checkboxLabel: {
+    fontSize: 14,
+    color: '#374151',
+    fontWeight: '500',
+    flex: 1,
   },
 });

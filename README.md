@@ -1,21 +1,45 @@
-# Chaona Next
+# ChaonaNext 🌱
 
-A modern, cross-platform mobile and web application built with Expo and React Native, featuring internationalization and responsive design.
+**Powering the Next Generation of Farmers**
 
-## 🌟 Features
+ChaonaNext is a cross-platform agricultural waste marketplace application that connects farmers with businesses to transform agricultural waste into valuable products, creating a circular economy that benefits everyone.
 
-- **Cross-Platform**: Works on iOS, Android, and Web
-- **Internationalization (i18n)**: Multi-language support with i18next
-  - English (EN)
-  - Thai (TH)
-  - Easily extendable for more languages
-- **Responsive Design**: Adaptive UI for mobile and desktop
-- **Modern UI Components**:
-  - Sticky navigation bar
-  - Mobile hamburger menu
-  - Language selector modal
-  - ESG-themed content sections
-- **TypeScript**: Full type safety and better development experience
+## 🚀 Live Demo
+
+- **Web Version**: Coming soon (Will be deployed to Netlify/Vercel)
+- **Mobile**: Available via Expo Go app using QR code
+
+## 📱 Features
+
+### ✅ Currently Implemented
+- 🌍 **Bilingual Support**: Full English/Thai localization
+- 📱 **Cross-Platform**: Works on Web, iOS, and Android
+- 🏪 **Marketplace**: Browse agricultural waste products with real images
+- 📝 **Submit Waste**: Comprehensive form for listing agricultural waste
+- 💰 **E-commerce Ready**: Pricing, conditions, seller info, payment methods
+- 🎨 **Responsive Design**: Optimized for both mobile and desktop
+- 📸 **Photo Upload**: Camera and gallery integration
+- 🔍 **Search & Filter**: Find products by category and search terms
+- 📍 **Location Support**: Multiple Thai provinces supported
+
+### 🚧 In Development
+- 👤 **User Authentication**: Login/register system
+- 💬 **Messaging**: Direct communication between buyers and sellers
+- 💳 **Payment Integration**: Secure payment processing
+- 📊 **Dashboard**: Analytics and management tools
+- 🔔 **Notifications**: Push notifications for updates
+- 🌟 **Reviews & Ratings**: User feedback system
+
+## 🛠 Tech Stack
+
+- **Framework**: Expo (React Native + Expo Router)
+- **Language**: TypeScript
+- **Internationalization**: i18next + react-i18next
+- **Navigation**: Expo Router (file-based routing)
+- **Styling**: React Native StyleSheet
+- **Images**: Expo Image Picker
+- **Icons**: FontAwesome via @expo/vector-icons
+- **Development**: Expo CLI with hot reloading
 
 ## 🚀 Getting Started
 
