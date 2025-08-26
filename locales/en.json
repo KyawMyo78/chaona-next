@@ -6,7 +6,10 @@
     "dashboard": "Dashboard",
     "language": "Language",
     "login": "Login",
-    "profile": "Profile"
+    "logout": "Logout",
+    "profile": "Profile",
+    "settings": "Settings",
+    "help": "Help & Support"
   },
   "hero": {
     "logo": "ChaonaNext",
@@ -81,6 +84,11 @@
     "description": "Join thousands of farmers already benefiting from our platform",
     "primaryButton": "Get Started Today",
     "secondaryButton": "Learn More"
+  },
+  "welcome": {
+    "title": "Welcome Back!",
+    "description": "Ready to manage your agricultural waste and explore new opportunities?",
+    "primaryButton": "Submit Waste"
   },
   "submitWaste": {
     "title": "Submit Your Agricultural Waste",
@@ -245,6 +253,278 @@
         "description": "Fibrous residue from sugar cane processing, excellent for paper and biofuel.",
         "price": "฿150/ton"
       }
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "subtitle": "Manage your account and preferences",
+    "information": {
+      "title": "👤 Profile Information",
+      "name": "John Farmer",
+      "membershipLevel": "Premium Member",
+      "memberSince": "Member since 2024"
+    },
+    "activity": {
+      "title": "📊 Your Activity",
+      "wasteSubmissions": {
+        "number": "12",
+        "label": "Waste Submissions"
+      },
+      "purchases": {
+        "number": "8",
+        "label": "Purchases Made"
+      },
+      "earnings": {
+        "number": "฿15,600",
+        "label": "Total Earnings"
+      },
+      "rating": {
+        "number": "4.8",
+        "label": "Rating"
+      }
+    },
+    "impact": {
+      "title": "🌱 Your Environmental Impact",
+      "co2Prevented": {
+        "number": "180",
+        "label": "Tons CO₂ Prevented",
+        "description": "From your waste submissions"
+      },
+      "wasteRecycled": {
+        "number": "1,200",
+        "label": "kg Waste Recycled",
+        "description": "Total agricultural waste processed"
+      },
+      "treesEquivalent": {
+        "number": "24",
+        "label": "Trees Equivalent",
+        "description": "CO₂ absorption equivalent"
+      }
+    },
+    "financial": {
+      "title": "💰 Financial Dashboard",
+      "totalEarnings": {
+        "number": "฿15,600",
+        "label": "Total Earnings",
+        "description": "All time"
+      },
+      "pendingPayments": {
+        "number": "฿2,450",
+        "label": "Pending Payments",
+        "description": "Processing"
+      },
+      "costSavings": {
+        "number": "฿8,900",
+        "label": "Cost Savings",
+        "description": "Environmental value"
+      },
+      "monthlyAverage": {
+        "number": "฿1,300",
+        "label": "Monthly Average",
+        "description": "Last 12 months"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Welcome to ChaonaNext - Start exploring our features",
+    "environmentalImpact": {
+      "title": "🌍 Environmental Impact",
+      "co2Saved": {
+        "number": "2,450",
+        "label": "Tons CO₂ Saved",
+        "description": "Prevented from burning"
+      },
+      "wasteProcessed": {
+        "number": "15,680", 
+        "label": "Tons Processed",
+        "description": "Agricultural waste recycled"
+      },
+      "farmersHelped": {
+        "number": "8,234",
+        "label": "Farmers Helped",
+        "description": "Additional income generated"
+      }
+    },
+    "communityImpact": {
+      "title": "🤝 Community Impact",
+      "transactions": {
+        "number": "1,245",
+        "label": "Successful Transactions"
+      },
+      "organizations": {
+        "number": "156",
+        "label": "Partner Organizations"
+      },
+      "regions": {
+        "number": "47",
+        "label": "Regions Covered"
+      },
+      "earnings": {
+        "number": "฿2.4M",
+        "label": "Farmer Earnings"
+      }
+    },
+    "charts": {
+      "title": "📈 Environmental Impact Trends",
+      "co2Savings": "CO₂ Savings (Tons)",
+      "wasteProcessed": "Waste Processed (Tons)",
+      "farmersHelped": "Farmers Helped"
+    },
+    "cta": {
+      "title": "Join Our Community",
+      "subtitle": "Start contributing to a sustainable future while earning from your agricultural waste",
+      "button": "Get Started Today"
+    },
+    "overview": {
+      "title": "📊 Platform Overview",
+      "totalWaste": {
+        "number": "45,320",
+        "label": "Total Waste Processed",
+        "description": "Tons this month"
+      },
+      "activeTransactions": {
+        "number": "234",
+        "label": "Active Transactions",
+        "description": "Currently processing"
+      },
+      "averagePrice": {
+        "number": "฿18.50",
+        "label": "Average Price",
+        "description": "Per kg this week"
+      },
+      "satisfaction": {
+        "number": "96%",
+        "label": "User Satisfaction",
+        "description": "Based on ratings"
+      }
+    },
+    "quickActions": {
+      "title": "🚀 Quick Actions",
+      "submitWaste": "Submit Waste",
+      "browseMarket": "Browse Marketplace", 
+      "viewAnalytics": "View Analytics",
+      "contactSupport": "Contact Support"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark All Read",
+    "empty": {
+      "title": "No notifications yet",
+      "message": "We'll notify you when there's something new to check out."
+    },
+    "types": {
+      "priceAlert": "Price Alert",
+      "newOpportunity": "New Opportunity",
+      "systemUpdate": "System Update", 
+      "reminder": "Reminder"
+    },
+    "messages": {
+      "riceHuskPrice": "Rice husk price increased to ฿18/kg in your area",
+      "newBuyer": "New buyer looking for corn stalks in Chiang Mai",
+      "systemMaintenance": "Scheduled maintenance completed - platform is fully operational",
+      "wastePickup": "Don't forget to prepare your waste materials for tomorrow's pickup"
+    }
+  },
+  "help": {
+    "title": "Help & Support",
+    "subtitle": "Get the help you need to make the most of ChaonaNext",
+    "quickActions": {
+      "title": "Quick Actions",
+      "contact": "Call Support",
+      "email": "Send Email",
+      "chat": "Live Chat",
+      "guides": "User Guides"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "items": {
+        "gettingStarted": {
+          "question": "How do I get started on ChaonaNext?",
+          "answer": "Simply create an account, complete your profile, and start browsing waste opportunities or listing your agricultural waste materials. Our platform guides you through each step."
+        },
+        "submitWaste": {
+          "question": "How do I submit my waste materials?",
+          "answer": "Go to the 'Submit Waste' page, fill out the form with details about your waste type, quantity, location, and pricing. Add photos and submit for review."
+        },
+        "pricing": {
+          "question": "How is pricing determined?",
+          "answer": "Pricing is based on market demand, waste type, quality, quantity, and location. Our platform provides pricing guidelines and allows negotiation between buyers and sellers."
+        },
+        "payment": {
+          "question": "How do payments work?",
+          "answer": "ChaonaNext facilitates secure transactions between buyers and sellers. Payments are processed after successful delivery and quality verification."
+        },
+        "quality": {
+          "question": "What quality standards are required?",
+          "answer": "We provide quality guidelines for different waste types. Materials should be properly sorted, clean, and meet the specifications outlined for each category."
+        },
+        "support": {
+          "question": "How can I contact support?",
+          "answer": "You can reach our support team via phone, email, or live chat. We're available Monday-Friday, 8:00 AM - 6:00 PM (Thailand time)."
+        }
+      }
+    },
+    "contact": {
+      "title": "Contact Information",
+      "hours": "Mon-Fri, 8:00 AM - 6:00 PM (TH)"
+    }
+  },
+  "login": {
+    "welcome": "Welcome Back",
+    "subtitle": "Sign in to your ChaonaNext account to continue",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email address",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "forgotPassword": "Forgot Password?",
+    "forgotPasswordMessage": "Please contact support to reset your password.",
+    "login": "Sign In",
+    "loggingIn": "Signing In...",
+    "or": "OR",
+    "noAccount": "Don't have an account?",
+    "register": "Sign Up",
+    "error": "Error",
+    "fillAllFields": "Please fill in all required fields.",
+    "loginFailed": "Login failed. Please try again.",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Please enter a valid email address",
+    "passwordRequired": "Password is required",
+    "demoInfo": "Demo Mode",
+    "anyCredentials": "Enter any email and password to sign in."
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your account preferences and business information",
+    "account": {
+      "title": "Account Settings",
+      "profile": "Edit Profile",
+      "email": "Email Address",
+      "password": "Change Password",
+      "phone": "Phone Number"
+    },
+    "preferences": {
+      "title": "Preferences",
+      "notifications": "Notifications",
+      "language": "Language",
+      "privacy": "Privacy Settings"
+    },
+    "business": {
+      "title": "Business Settings",
+      "farmInfo": "Farm Information",
+      "payment": "Payment Methods",
+      "shipping": "Shipping Settings"
+    },
+    "support": {
+      "title": "Help & Support",
+      "help": "Help Center",
+      "terms": "Terms & Conditions",
+      "about": "About ChaonaNext"
+    },
+    "danger": {
+      "title": "Danger Zone",
+      "deleteAccount": "Delete Account"
     }
   }
 }

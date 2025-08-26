@@ -3,7 +3,8 @@ import { StyleSheet, ScrollView, TouchableOpacity, useWindowDimensions, Platform
 import { Text, View } from '@/components/Themed';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
+import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/Navbar';
 
 export default function HomeScreen() {
@@ -11,6 +12,8 @@ export default function HomeScreen() {
   const isLargeScreen = width > 768;
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
+  const router = useRouter();
+  const { isLoggedIn } = useAuth();
   
   // Animation values - all sections start visible on Android
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -304,26 +307,49 @@ export default function HomeScreen() {
         ]}
       >
         <View style={styles.ctaContent}>
-          <Text style={[styles.ctaTitle, isLargeScreen && styles.ctaTitleLarge]}>
-            {t('cta.title')}
-          </Text>
-          <Text style={[styles.ctaSubtitle, isLargeScreen && styles.ctaSubtitleLarge]}>
-            {t('cta.description')}
-          </Text>
-          
-          <View style={[styles.ctaButtons, isLargeScreen && styles.ctaButtonsLarge]}>
-            <TouchableOpacity style={[styles.primaryButton, isLargeScreen && styles.primaryButtonLarge]}>
-              <Text style={[styles.primaryButtonText, isLargeScreen && styles.primaryButtonTextLarge]}>
-                {t('cta.primaryButton')}
+          {!isLoggedIn ? (
+            // Show CTA for non-logged in users
+            <>
+              <Text style={[styles.ctaTitle, isLargeScreen && styles.ctaTitleLarge]}>
+                {t('cta.title')}
               </Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity style={[styles.secondaryButton, isLargeScreen && styles.secondaryButtonLarge]}>
-              <Text style={[styles.secondaryButtonText, isLargeScreen && styles.secondaryButtonTextLarge]}>
-                {t('cta.secondaryButton')}
+              <Text style={[styles.ctaSubtitle, isLargeScreen && styles.ctaSubtitleLarge]}>
+                {t('cta.description')}
               </Text>
-            </TouchableOpacity>
-          </View>
+              
+              <View style={[styles.ctaButtons, isLargeScreen && styles.ctaButtonsLarge]}>
+                <TouchableOpacity 
+                  style={[styles.primaryButton, isLargeScreen && styles.primaryButtonLarge]}
+                  onPress={() => router.push('/(tabs)/login')}
+                >
+                  <Text style={[styles.primaryButtonText, isLargeScreen && styles.primaryButtonTextLarge]}>
+                    {t('cta.primaryButton')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          ) : (
+            // Show welcome message for logged in users
+            <>
+              <Text style={[styles.ctaTitle, isLargeScreen && styles.ctaTitleLarge]}>
+                {t('welcome.title')}
+              </Text>
+              <Text style={[styles.ctaSubtitle, isLargeScreen && styles.ctaSubtitleLarge]}>
+                {t('welcome.description')}
+              </Text>
+              
+              <View style={[styles.ctaButtons, isLargeScreen && styles.ctaButtonsLarge]}>
+                <TouchableOpacity 
+                  style={[styles.primaryButton, isLargeScreen && styles.primaryButtonLarge]}
+                  onPress={() => router.push('/(tabs)/submit-waste')}
+                >
+                  <Text style={[styles.primaryButtonText, isLargeScreen && styles.primaryButtonTextLarge]}>
+                    {t('welcome.primaryButton')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
         </View>
       </View>
 
@@ -764,17 +790,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
   },
   ctaButtons: {
-    gap: 20,
     width: '100%',
-    maxWidth: 600,
+    maxWidth: 300,
     alignItems: 'center',
     alignSelf: 'center',
     backgroundColor: 'transparent',
   },
   ctaButtonsLarge: {
-    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'center',
-    gap: 28,
   },
   primaryButton: {
     backgroundColor: '#dcfce7', // Light green instead of white
@@ -804,32 +828,5 @@ const styles = StyleSheet.create({
   },
   primaryButtonTextLarge: {
     fontSize: 20,
-  },
-  secondaryButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)', // Semi-transparent white
-    paddingVertical: 18,
-    paddingHorizontal: 36,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: '#dcfce7', // Light green border instead of white
-    alignItems: 'center',
-  },
-  secondaryButtonLarge: {
-    paddingVertical: 20,
-    paddingHorizontal: 44,
-    minWidth: 240,
-    borderRadius: 16,
-    borderWidth: 3,
-    borderColor: '#dcfce7', // Light green border
-  },
-  secondaryButtonText: {
-    color: '#dcfce7', // Light green text instead of white
-    fontSize: 18,
-    fontWeight: '700',
-    letterSpacing: -0.3,
-  },
-  secondaryButtonTextLarge: {
-    fontSize: 20,
-    color: '#dcfce7', // Light green text
   },
 });

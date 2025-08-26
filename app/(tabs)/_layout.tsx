@@ -6,6 +6,7 @@ import { Pressable } from 'react-native';
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Initialize i18n
 import '@/i18n';
@@ -20,6 +21,7 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { isLoggedIn } = useAuth();
 
   return (
     <Tabs
@@ -39,6 +41,22 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="login"
+        options={{
+          title: 'Login',
+          tabBarIcon: ({ color }) => <TabBarIcon name="sign-in" color={color} />,
+          headerShown: false, // Hide the header completely
+        }}
+      />
+      <Tabs.Screen
+        name="register"
+        options={{
+          title: 'Register',
+          tabBarIcon: ({ color }) => <TabBarIcon name="user-plus" color={color} />,
+          headerShown: false, // Hide the header completely
+        }}
+      />
+      <Tabs.Screen
         name="submit-waste"
         options={{
           title: 'Submit Waste',
@@ -51,6 +69,14 @@ export default function TabLayout() {
         options={{
           title: 'Marketplace',
           tabBarIcon: ({ color }) => <TabBarIcon name="shopping-cart" color={color} />,
+          headerShown: false, // Hide the header completely
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: isLoggedIn ? 'Profile' : 'Dashboard',
+          tabBarIcon: ({ color }) => <TabBarIcon name={isLoggedIn ? "user" : "dashboard"} color={color} />,
           headerShown: false, // Hide the header completely
         }}
       />
