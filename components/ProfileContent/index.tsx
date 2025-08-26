@@ -13,9 +13,11 @@ import Navbar from '@/components/Navbar';
 import { styles } from '@/styles/profileStyles';
 
 export default function ProfileContent() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { width: screenWidth } = useWindowDimensions();
   const isLargeScreen = screenWidth >= 768;
+  // Responsive font size for user name
+  const nameFontSize = isLargeScreen ? 36 : screenWidth < 400 ? 20 : 28;
 
   return (
     <View style={styles.screenContainer}>
@@ -32,7 +34,9 @@ export default function ProfileContent() {
           </Text>
           <View style={styles.impactCard}>
             <FontAwesome name="user-circle" size={64} color="#15803d" style={styles.impactIcon} />
-            <Text style={styles.impactNumber}>{t('profile.information.name')}</Text>
+            <Text style={[styles.impactNumber, { fontSize: nameFontSize, textAlign: 'center' }]}>
+              {t('profile.information.name')}
+            </Text>
             <Text style={styles.impactLabel}>{t('profile.information.membershipLevel')}</Text>
             <Text style={styles.impactDescription}>{t('profile.information.memberSince')}</Text>
           </View>

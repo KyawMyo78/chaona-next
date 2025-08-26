@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform, Pressable } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform, Pressable, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Link, useRouter } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -26,87 +26,89 @@ const Navbar: React.FC<NavbarProps> = ({ isLargeScreen, activeTab = 'home' }) =>
       <View style={[styles.navbar, isLargeScreen && styles.navbarLarge]}>
         <View style={styles.navContainer}>
           {/* Logo */}
-          <Text style={[styles.navLogo, isLargeScreen && styles.navLogoLarge]}>
-            ChaonaNext
-          </Text>
+          <TouchableOpacity onPress={() => router.push('./')}>
+            <Text style={[styles.navLogo, isLargeScreen && styles.navLogoLarge]}>
+              ChaonaNext
+            </Text>
+          </TouchableOpacity>
 
           {isLargeScreen ? (
             /* Desktop Navigation */
             <View style={styles.navLinks}>
               <Link href="./" asChild>
                 <TouchableOpacity style={styles.navLink}>
-                  <Text style={[
-                    styles.navLinkText, 
-                    activeTab === 'home' && styles.navLinkActive
-                  ]}>
+                  <Text style={[styles.navLinkText, activeTab === 'home' && styles.navLinkActive]}>
                     {t('navigation.home')}
                   </Text>
                 </TouchableOpacity>
               </Link>
               <Link href="./submit-waste" asChild>
                 <TouchableOpacity style={styles.navLink}>
-                  <Text style={[
-                    styles.navLinkText, 
-                    activeTab === 'submit-waste' && styles.navLinkActive
-                  ]}>
+                  <Text style={[styles.navLinkText, activeTab === 'submit-waste' && styles.navLinkActive]}>
                     {t('navigation.submitWaste')}
                   </Text>
                 </TouchableOpacity>
               </Link>
               <Link href="./marketplace" asChild>
                 <TouchableOpacity style={styles.navLink}>
-                  <Text style={[
-                    styles.navLinkText, 
-                    activeTab === 'marketplace' && styles.navLinkActive
-                  ]}>
+                  <Text style={[styles.navLinkText, activeTab === 'marketplace' && styles.navLinkActive]}>
                     {t('navigation.marketplace')}
                   </Text>
                 </TouchableOpacity>
               </Link>
               <Link href="./profile" asChild>
                 <TouchableOpacity style={styles.navLink}>
-                  <Text style={[
-                    styles.navLinkText, 
-                    activeTab === 'profile' && styles.navLinkActive
-                  ]}>
+                  <Text style={[styles.navLinkText, activeTab === 'profile' && styles.navLinkActive]}>
                     {profileTabText}
                   </Text>
                 </TouchableOpacity>
               </Link>
-              
               <LanguageSelector isMobile={false} />
-              
               {isLoggedIn && (
                 <NotificationBell isLargeScreen={true} />
               )}
-              
               {isLoggedIn ? (
-                <TouchableOpacity style={styles.loginButton} onPress={() => {
-                  toggleLogin();
-                  router.push('/(tabs)/profile');
-                }}>
-                  <Text style={styles.loginButtonText}>
-                    {t('navigation.logout')}
-                  </Text>
-                </TouchableOpacity>
+                <>
+                  <TouchableOpacity
+                    style={styles.mobileMenuButton}
+                    onPress={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    activeOpacity={0.7}
+                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                  >
+                    <FontAwesome name="bars" size={20} color="#15803d" />
+                  </TouchableOpacity>
+                  {isMobileMenuOpen && (
+                    <View style={[styles.userDropdown, { right: 0, top: 48, position: 'absolute' }]}> 
+                      <TouchableOpacity style={[styles.userMenuItem, styles.userMenuItemTop]} onPress={() => { setIsMobileMenuOpen(false); router.push('/(tabs)/settings'); }}>
+                        <FontAwesome name="cog" size={16} color="#6b7280" style={styles.mobileMenuIcon} />
+                        <Text style={styles.userMenuText}>{t('navigation.settings')}</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.userMenuItem} onPress={() => { setIsMobileMenuOpen(false); router.push('/(tabs)/help'); }}>
+                        <FontAwesome name="question-circle" size={16} color="#6b7280" style={styles.mobileMenuIcon} />
+                        <Text style={styles.userMenuText}>{t('navigation.help')}</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={[styles.userMenuItem, styles.userMenuItemBottom]} onPress={() => { setIsMobileMenuOpen(false); toggleLogin(); }}>
+                        <FontAwesome name="sign-out" size={16} color="#ef4444" style={styles.mobileMenuIcon} />
+                        <Text style={[styles.userMenuText, styles.userMenuLogoutText]}>{t('navigation.logout')}</Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </>
               ) : (
                 <TouchableOpacity style={styles.loginButton} onPress={() => {
-                  toggleLogin();
-                  router.push('/(tabs)/profile');
+                  router.push('/(tabs)/login');
                 }}>
                   <Text style={styles.loginButtonText}>
                     {t('navigation.login')}
                   </Text>
                 </TouchableOpacity>
               )}
-                  
             </View>
           ) : (
             /* Mobile Navigation - Fixed hamburger button */
             <TouchableOpacity 
               style={styles.mobileMenuButton}
               onPress={() => {
-                console.log('Hamburger pressed, current state:', isMobileMenuOpen);
                 setIsMobileMenuOpen(!isMobileMenuOpen);
               }}
               activeOpacity={0.7}
@@ -120,7 +122,9 @@ const Navbar: React.FC<NavbarProps> = ({ isLargeScreen, activeTab = 'home' }) =>
 
       {/* Mobile Menu Dropdown */}
       {!isLargeScreen && isMobileMenuOpen && (
-        <View style={styles.mobileMenu}>
+          <View style={{ flex: 1, position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 999 }}>
+            <View style={{ flex: 1, paddingBottom: 80 }}>
+              <ScrollView contentContainerStyle={styles.mobileMenu}>
           {/* Profile Header for logged in users */}
           {isLoggedIn && (
             <>
@@ -138,20 +142,37 @@ const Navbar: React.FC<NavbarProps> = ({ isLargeScreen, activeTab = 'home' }) =>
             </>
           )}
           
-          <Link href="./" asChild>
-            <TouchableOpacity 
-              style={styles.mobileMenuItem}
-              onPress={() => setIsMobileMenuOpen(false)}
-            >
-              <FontAwesome name="home" size={16} color="#6b7280" style={styles.mobileMenuIcon} />
-              <Text style={[
-                styles.mobileMenuText, 
-                activeTab === 'home' && styles.mobileMenuActive
-              ]}>
-                {isLoggedIn ? t('navigation.dashboard') : t('navigation.home')}
-              </Text>
-            </TouchableOpacity>
-          </Link>
+              {isLoggedIn ? (
+                <Link href="./dashboard" asChild>
+                  <TouchableOpacity 
+                    style={styles.mobileMenuItem}
+                    onPress={() => setIsMobileMenuOpen(false)}
+                  >
+                      <FontAwesome name="dashboard" size={16} color="#6b7280" style={styles.mobileMenuIcon} />
+                    <Text style={[ 
+                      styles.mobileMenuText, 
+                      activeTab === 'dashboard' && styles.mobileMenuActive
+                    ]}>
+                      {t('navigation.dashboard')}
+                    </Text>
+                  </TouchableOpacity>
+                </Link>
+              ) : (
+                <Link href="./" asChild>
+                  <TouchableOpacity 
+                    style={styles.mobileMenuItem}
+                    onPress={() => setIsMobileMenuOpen(false)}
+                  >
+                      <FontAwesome name="home" size={16} color="#6b7280" style={styles.mobileMenuIcon} />
+                    <Text style={[ 
+                      styles.mobileMenuText, 
+                      activeTab === 'home' && styles.mobileMenuActive
+                    ]}>
+                      {t('navigation.home')}
+                    </Text>
+                  </TouchableOpacity>
+                </Link>
+              )}
           
           <Link href="./submit-waste" asChild>
             <TouchableOpacity 
@@ -183,20 +204,37 @@ const Navbar: React.FC<NavbarProps> = ({ isLargeScreen, activeTab = 'home' }) =>
             </TouchableOpacity>
           </Link>
           
-          <Link href="./profile" asChild>
-            <TouchableOpacity 
-              style={styles.mobileMenuItem}
-              onPress={() => setIsMobileMenuOpen(false)}
-            >
-              <FontAwesome name="user" size={16} color="#6b7280" style={styles.mobileMenuIcon} />
-              <Text style={[
-                styles.mobileMenuText, 
-                activeTab === 'profile' && styles.mobileMenuActive
-              ]}>
-                {profileTabText}
-              </Text>
-            </TouchableOpacity>
-          </Link>
+          {isLoggedIn ? (
+            <Link href="./profile" asChild>
+              <TouchableOpacity 
+                style={styles.mobileMenuItem}
+                onPress={() => setIsMobileMenuOpen(false)}
+              >
+                <FontAwesome name="user" size={16} color="#6b7280" style={styles.mobileMenuIcon} />
+                <Text style={[
+                  styles.mobileMenuText, 
+                  activeTab === 'profile' && styles.mobileMenuActive
+                ]}>
+                  {profileTabText}
+                </Text>
+              </TouchableOpacity>
+            </Link>
+          ) : (
+            <Link href="./dashboard" asChild>
+              <TouchableOpacity 
+                style={styles.mobileMenuItem}
+                onPress={() => setIsMobileMenuOpen(false)}
+              >
+                <FontAwesome name="dashboard" size={16} color="#6b7280" style={styles.mobileMenuIcon} />
+                <Text style={[
+                  styles.mobileMenuText, 
+                  activeTab === 'dashboard' && styles.mobileMenuActive
+                ]}>
+                  {t('navigation.dashboard')}
+                </Text>
+              </TouchableOpacity>
+            </Link>
+          )}
           
           {/* Additional options for logged in users */}
           {isLoggedIn && (
@@ -248,9 +286,12 @@ const Navbar: React.FC<NavbarProps> = ({ isLargeScreen, activeTab = 'home' }) =>
           <TouchableOpacity 
             style={[styles.mobileMenuItem, styles.mobileLoginButton]}
             onPress={() => {
-              toggleLogin();
               setIsMobileMenuOpen(false);
-              router.push('/(tabs)/profile');
+              if (!isLoggedIn) {
+                router.push('/(tabs)/login');
+              } else {
+                toggleLogin();
+              }
             }}
           >
             <FontAwesome 
@@ -263,6 +304,8 @@ const Navbar: React.FC<NavbarProps> = ({ isLargeScreen, activeTab = 'home' }) =>
               {isLoggedIn ? t('navigation.logout') : t('navigation.login')}
             </Text>
           </TouchableOpacity>
+            </ScrollView>
+          </View>
         </View>
       )}
     </>
@@ -397,11 +440,15 @@ const styles = StyleSheet.create({
     marginTop: 8,
     borderRadius: 8,
     alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    gap: 8,
   },
   mobileLoginText: {
     color: '#ffffff',
     fontSize: 16,
     fontWeight: '600',
+    textAlign: 'center',
   },
   userMenuButton: {
     flexDirection: 'row',
@@ -420,7 +467,7 @@ const styles = StyleSheet.create({
     top: '100%',
     right: 0,
     backgroundColor: 'white',
-    borderRadius: 8,
+    borderRadius: 16,
     minWidth: 280,
     maxWidth: 320,
     shadowColor: '#000',
@@ -432,12 +479,30 @@ const styles = StyleSheet.create({
     borderColor: '#e5e7eb',
     zIndex: 1000,
     marginTop: 8,
+    overflow: 'hidden',
   },
   userMenuItem: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
     paddingHorizontal: 16,
     paddingVertical: 12,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: '#15803d',
+    backgroundColor: '#f6fff4',
+    marginVertical: 0,
+    shadowColor: '#15803d',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+  },
+  userMenuItemTop: {
+    borderTopWidth: 0,
+  },
+  userMenuItemBottom: {
+    borderBottomWidth: 0,
   },
   userMenuText: {
     fontSize: 14,
@@ -539,8 +604,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   mobileMenuIcon: {
-    marginRight: 12,
-    width: 16,
+    marginRight: 8,
+    width: 20,
+    textAlign: 'center',
+    alignSelf: 'center',
   },
 });
 

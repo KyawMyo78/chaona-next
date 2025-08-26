@@ -76,6 +76,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+    gap: 24, // Add gap between impact cards for desktop
   },
   impactCard: {
     backgroundColor: '#ffffff',
@@ -118,6 +119,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+    gap: 24, // Add gap between cards for desktop
   },
   statCard: {
     backgroundColor: '#ffffff',
@@ -127,7 +129,8 @@ export const styles = StyleSheet.create({
     flex: 1,
     minWidth: Platform.OS === 'web' ? '22%' : undefined,
     borderWidth: 1,
-    marginBottom: 16,
+  marginBottom: 16,
+  // gap for desktop handled by statsGridLarge
     borderColor: '#e5e7eb',
   },
   statNumber: {

@@ -321,12 +321,11 @@ export const homeStyles = StyleSheet.create({
     borderWidth: 3,
     borderColor: '#dcfce7', // Light green border
     ...(Platform.OS === 'web' ? {
-      boxShadow: '0 6px 8px rgba(21, 128, 61, 0.15)',
-    } : {
       shadowOffset: { width: 0, height: 6 },
       shadowOpacity: 0.15,
       shadowRadius: 8,
       shadowColor: 'rgba(21, 128, 61, 0.15)',
+    } : {
       elevation: 10,
     }),
   },
@@ -457,12 +456,11 @@ export const homeStyles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#15803d', // Forest green border
     ...(Platform.OS === 'web' ? {
-      boxShadow: '0 4px 6px rgba(21, 128, 61, 0.2)',
-    } : {
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.2,
       shadowRadius: 6,
       shadowColor: 'rgba(21, 128, 61, 0.2)',
+    } : {
       elevation: 6,
     }),
   },

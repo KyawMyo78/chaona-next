@@ -4,6 +4,7 @@ import { Link, Tabs } from 'expo-router';
 import { Pressable } from 'react-native';
 
 import Colors from '@/constants/Colors';
+import DemoFooter from '@/components/DemoFooter';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 import { useAuth } from '@/contexts/AuthContext';
@@ -24,6 +25,7 @@ export default function TabLayout() {
   const { isLoggedIn } = useAuth();
 
   return (
+    <>
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
@@ -73,13 +75,47 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="dashboard"
+        options={{
+          title: 'Dashboard',
+          tabBarIcon: ({ color }) => <TabBarIcon name="dashboard" color={color} />,
+          headerShown: false, // Hide the header completely
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
-          title: isLoggedIn ? 'Profile' : 'Dashboard',
-          tabBarIcon: ({ color }) => <TabBarIcon name={isLoggedIn ? "user" : "dashboard"} color={color} />,
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+          headerShown: false, // Hide the header completely
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: 'Settings',
+          tabBarIcon: ({ color }) => <TabBarIcon name="cog" color={color} />,
+          headerShown: false, // Hide the header completely
+        }}
+      />
+      <Tabs.Screen
+        name="help"
+        options={{
+          title: 'Help',
+          tabBarIcon: ({ color }) => <TabBarIcon name="question-circle" color={color} />,
+          headerShown: false, // Hide the header completely
+        }}
+      />
+      <Tabs.Screen
+        name="notifications"
+        options={{
+          title: 'Notifications',
+          tabBarIcon: ({ color }) => <TabBarIcon name="bell" color={color} />,
           headerShown: false, // Hide the header completely
         }}
       />
     </Tabs>
+      <DemoFooter />
+    </>
   );
 }

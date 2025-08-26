@@ -163,7 +163,7 @@ export default function HelpScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    // backgroundColor removed for transparent/default
   },
   scrollView: {
     flex: 1,
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   actionCard: {
-    backgroundColor: 'white',
+    // backgroundColor removed for transparent/default
     borderRadius: 12,
     padding: 20,
     alignItems: 'center',
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   faqContainer: {
-    backgroundColor: 'white',
+    // backgroundColor removed for transparent/default
     borderRadius: 12,
     overflow: 'hidden',
     elevation: 2,
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
   faqAnswer: {
     paddingHorizontal: 16,
     paddingBottom: 16,
-    backgroundColor: '#f9fafb',
+    // backgroundColor removed for transparent/default
   },
   faqAnswerText: {
     fontSize: 14,
@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   contactCard: {
-    backgroundColor: 'white',
+    // backgroundColor removed for transparent/default
     borderRadius: 12,
     padding: 20,
     elevation: 2,

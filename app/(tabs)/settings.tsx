@@ -121,7 +121,7 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    // backgroundColor removed for transparent/default
   },
   scrollView: {
     flex: 1,
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   settingsGrid: {
-    backgroundColor: 'white',
+    // backgroundColor removed for transparent/default
     borderRadius: 12,
     overflow: 'hidden',
     elevation: 2,
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#f0fdf4',
+    // backgroundColor removed for transparent/default
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     color: '#ef4444',
   },
   dangerItem: {
-    backgroundColor: '#fef2f2',
+    // backgroundColor removed for transparent/default
   },
   dangerLabel: {
     color: '#ef4444',

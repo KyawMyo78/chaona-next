@@ -19,6 +19,7 @@ export default function DashboardContent() {
   const { width: screenWidth } = useWindowDimensions();
   const isLargeScreen = screenWidth >= 768;
   const { login } = useAuth();
+  const router = require('expo-router').useRouter();
 
   return (
     <View style={styles.screenContainer}>
@@ -133,42 +134,40 @@ export default function DashboardContent() {
             {t('dashboard.quickActions.title')}
           </Text>
           <View style={[styles.statsGrid, isLargeScreen && styles.statsGridLarge]}>
-            <TouchableOpacity style={styles.statCard}>
+            <TouchableOpacity style={styles.statCard} onPress={() => router.push('/(tabs)/submit-waste')}>
               <FontAwesome name="plus-circle" size={32} color="#15803d" />
               <Text style={styles.statLabel}>{t('dashboard.quickActions.submitWaste')}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.statCard}>
+            <TouchableOpacity style={styles.statCard} onPress={() => router.push('/(tabs)/marketplace')}>
               <FontAwesome name="shopping-bag" size={32} color="#15803d" />
               <Text style={styles.statLabel}>{t('dashboard.quickActions.browseMarket')}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.statCard}>
-              <FontAwesome name="bar-chart" size={32} color="#15803d" />
-              <Text style={styles.statLabel}>{t('dashboard.quickActions.viewAnalytics')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.statCard}>
+            <TouchableOpacity style={styles.statCard} onPress={() => router.push('/(tabs)/help')}>
               <FontAwesome name="support" size={32} color="#15803d" />
               <Text style={styles.statLabel}>{t('dashboard.quickActions.contactSupport')}</Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* Join CTA Section */}
-        <View style={[styles.ctaSection, isLargeScreen && styles.ctaSectionLarge]}>
-          <Text style={[styles.ctaTitle, isLargeScreen && styles.ctaTitleLarge]}>
-            {t('dashboard.cta.title')}
-          </Text>
-          <Text style={[styles.ctaSubtitle, isLargeScreen && styles.ctaSubtitleLarge]}>
-            {t('dashboard.cta.subtitle')}
-          </Text>
-          <TouchableOpacity 
-            style={[styles.ctaButton, isLargeScreen && styles.ctaButtonLarge]}
-            onPress={login}
-          >
-            <Text style={[styles.ctaButtonText, isLargeScreen && styles.ctaButtonTextLarge]}>
-              {t('dashboard.cta.button')}
+        {/* Join CTA Section (only show if not logged in) */}
+        {!login && (
+          <View style={[styles.ctaSection, isLargeScreen && styles.ctaSectionLarge]}>
+            <Text style={[styles.ctaTitle, isLargeScreen && styles.ctaTitleLarge]}>
+              {t('dashboard.cta.title')}
             </Text>
-          </TouchableOpacity>
-        </View>
+            <Text style={[styles.ctaSubtitle, isLargeScreen && styles.ctaSubtitleLarge]}>
+              {t('dashboard.cta.subtitle')}
+            </Text>
+            <TouchableOpacity 
+              style={[styles.ctaButton, isLargeScreen && styles.ctaButtonLarge]}
+              onPress={login}
+            >
+              <Text style={[styles.ctaButtonText, isLargeScreen && styles.ctaButtonTextLarge]}>
+                {t('dashboard.cta.button')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </ScrollView>
     </View>
   );
