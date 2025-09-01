@@ -3,6 +3,7 @@ import { StyleSheet, ScrollView, TouchableOpacity, useWindowDimensions } from 'r
 import { Text, View } from '@/components/Themed';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
+import { useRouter } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Navbar from '@/components/Navbar';
 
@@ -11,6 +12,7 @@ export default function HelpScreen() {
   const isLargeScreen = width > 768;
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
+  const router = useRouter();
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
   const helpCategories = [
@@ -54,7 +56,12 @@ export default function HelpScreen() {
 
   const handleHelpAction = (action: string) => {
     console.log(`Help action pressed: ${action}`);
-    // TODO: Implement help actions (contact, email, chat, guides)
+    if (action === 'chat') {
+      // Navigate to AI chat bot
+      router.push('/chaona_buddy');
+    } else {
+      // TODO: Implement other help actions (contact, email, guides)
+    }
   };
 
   const toggleFaq = (index: number) => {
