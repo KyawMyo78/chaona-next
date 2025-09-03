@@ -5,6 +5,7 @@ import { Link, useRouter } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import LanguageSelector from '@/components/LanguageSelector';
 import NotificationBell from '@/components/NotificationBell';
+import NavbarAIButton from '@/components/NavbarAIButton';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface NavbarProps {
@@ -67,6 +68,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLargeScreen, activeTab = 'home' }) =>
               {isLoggedIn && (
                 <NotificationBell isLargeScreen={true} />
               )}
+              <NavbarAIButton />
               {isLoggedIn ? (
                 <>
                   <TouchableOpacity
@@ -106,16 +108,19 @@ const Navbar: React.FC<NavbarProps> = ({ isLargeScreen, activeTab = 'home' }) =>
             </View>
           ) : (
             /* Mobile Navigation - Fixed hamburger button */
-            <TouchableOpacity 
-              style={styles.mobileMenuButton}
-              onPress={() => {
-                setIsMobileMenuOpen(!isMobileMenuOpen);
-              }}
-              activeOpacity={0.7}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            >
-              <FontAwesome name="bars" size={20} color="#15803d" />
-            </TouchableOpacity>
+            <View style={styles.mobileNavButtons}>
+              <NavbarAIButton />
+              <TouchableOpacity 
+                style={styles.mobileMenuButton}
+                onPress={() => {
+                  setIsMobileMenuOpen(!isMobileMenuOpen);
+                }}
+                activeOpacity={0.7}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
+                <FontAwesome name="bars" size={20} color="#15803d" />
+              </TouchableOpacity>
+            </View>
           )}
         </View>
       </View>
@@ -378,6 +383,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   // Mobile Menu Styles - Fixed for proper display and interaction
+  mobileNavButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   mobileMenuButton: {
     padding: 12,
     minWidth: 44,

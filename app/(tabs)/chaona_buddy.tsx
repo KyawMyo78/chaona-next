@@ -5,6 +5,7 @@ import { GoogleGenAI } from '@google/genai';
 import { GEMINI_API_KEY } from '@env';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { Image } from 'react-native';
 import Markdown from 'react-native-markdown-display';
 
 const ChaonaBuddyChat = () => {
@@ -114,10 +115,10 @@ ChaonaNext is a platform for connecting sellers, buyers, farmers, and companies 
     // If user confirms navigation, use Gemini to generate explanation before routing
     if (pendingIntent && (lowerInput === 'yes' || lowerInput === 'ok' || lowerInput === 'y')) {
       let featurePrompt = '';
-      let route: "/dashboard" | "/marketplace" | "/profile" | "/help" | "/" = "/";
+      let route: "/dashboard" | "/marketplace" | "/profile" | "/submit-waste" | "/help" | "/" = "/";
       switch (pendingIntent) {
         case 'waste':
-          route = "/dashboard";
+          route = "/submit-waste";
           featurePrompt = 'Explain to the user how to submit a waste form in ChaonaNext. Tell them which button to press on the dashboard, what info to fill, and how to complete the process.';
           break;
         case 'marketplace':
@@ -168,14 +169,47 @@ ChaonaNext is a platform for connecting sellers, buyers, farmers, and companies 
       lowerInput.includes('recycle waste') ||
       lowerInput.includes('dispose waste')
     ) {
-      setMessages(msgs => [
-        ...msgs,
-        {
-          sender: 'buddy',
-          text:
-            "I can help you submit a waste form. Would you like to go to the waste submission page now? (yes/no)"
-        }
-      ]);
+      setLoading(true);
+      try {
+        const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+        // Build conversation history for context
+        let conversationHistory = SYSTEM_PROMPT + "\n\nConversation History:\n";
+        const previousMessages = messages.slice(1); // Skip the initial greeting
+        previousMessages.forEach((msg, index) => {
+          if (msg.sender === 'user') {
+            conversationHistory += `User: ${msg.text}\n`;
+          } else {
+            conversationHistory += `Chaona Buddy: ${msg.text}\n`;
+          }
+        });
+        conversationHistory += `User: ${input}\nChaona Buddy:`;
+        const response = await ai.models.generateContent({
+          model: 'gemini-2.5-flash',
+          contents: [conversationHistory],
+          config: {
+            thinkingConfig: {
+              thinkingBudget: 0,
+            },
+          },
+        });
+        let aiText = response.text || '';
+        aiText += '\n\nI can help you submit a waste form. Would you like to go to the waste submission page now? (yes/no)';
+        setMessages(msgs => [
+          ...msgs,
+          {
+            sender: 'buddy',
+            text: aiText
+          }
+        ]);
+      } catch (err) {
+        setMessages(msgs => [
+          ...msgs,
+          {
+            sender: 'buddy',
+            text: "I can help you submit a waste form. Would you like to go to the waste submission page now? (yes/no)"
+          }
+        ]);
+      }
       setPendingIntent('waste');
       setInput('');
       setLoading(false);
@@ -188,14 +222,46 @@ ChaonaNext is a platform for connecting sellers, buyers, farmers, and companies 
       lowerInput.includes('sell product') ||
       lowerInput.includes('browse products')
     ) {
-      setMessages(msgs => [
-        ...msgs,
-        {
-          sender: 'buddy',
-          text:
-            "Would you like to go to the Marketplace now? (yes/no)"
-        }
-      ]);
+      setLoading(true);
+      try {
+        const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+        let conversationHistory = SYSTEM_PROMPT + "\n\nConversation History:\n";
+        const previousMessages = messages.slice(1);
+        previousMessages.forEach((msg, index) => {
+          if (msg.sender === 'user') {
+            conversationHistory += `User: ${msg.text}\n`;
+          } else {
+            conversationHistory += `Chaona Buddy: ${msg.text}\n`;
+          }
+        });
+        conversationHistory += `User: ${input}\nChaona Buddy:`;
+        const response = await ai.models.generateContent({
+          model: 'gemini-2.5-flash',
+          contents: [conversationHistory],
+          config: {
+            thinkingConfig: {
+              thinkingBudget: 0,
+            },
+          },
+        });
+        let aiText = response.text || '';
+        aiText += '\n\nWould you like to go to the Marketplace now? (yes/no)';
+        setMessages(msgs => [
+          ...msgs,
+          {
+            sender: 'buddy',
+            text: aiText
+          }
+        ]);
+      } catch (err) {
+        setMessages(msgs => [
+          ...msgs,
+          {
+            sender: 'buddy',
+            text: "Would you like to go to the Marketplace now? (yes/no)"
+          }
+        ]);
+      }
       setPendingIntent('marketplace');
       setInput('');
       setLoading(false);
@@ -208,14 +274,46 @@ ChaonaNext is a platform for connecting sellers, buyers, farmers, and companies 
       lowerInput.includes('view profile') ||
       lowerInput.includes('activity history')
     ) {
-      setMessages(msgs => [
-        ...msgs,
-        {
-          sender: 'buddy',
-          text:
-            "Would you like to go to your Profile now? (yes/no)"
-        }
-      ]);
+      setLoading(true);
+      try {
+        const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+        let conversationHistory = SYSTEM_PROMPT + "\n\nConversation History:\n";
+        const previousMessages = messages.slice(1);
+        previousMessages.forEach((msg, index) => {
+          if (msg.sender === 'user') {
+            conversationHistory += `User: ${msg.text}\n`;
+          } else {
+            conversationHistory += `Chaona Buddy: ${msg.text}\n`;
+          }
+        });
+        conversationHistory += `User: ${input}\nChaona Buddy:`;
+        const response = await ai.models.generateContent({
+          model: 'gemini-2.5-flash',
+          contents: [conversationHistory],
+          config: {
+            thinkingConfig: {
+              thinkingBudget: 0,
+            },
+          },
+        });
+        let aiText = response.text || '';
+        aiText += '\n\nWould you like to go to your Profile now? (yes/no)';
+        setMessages(msgs => [
+          ...msgs,
+          {
+            sender: 'buddy',
+            text: aiText
+          }
+        ]);
+      } catch (err) {
+        setMessages(msgs => [
+          ...msgs,
+          {
+            sender: 'buddy',
+            text: "Would you like to go to your Profile now? (yes/no)"
+          }
+        ]);
+      }
       setPendingIntent('profile');
       setInput('');
       setLoading(false);
@@ -228,14 +326,46 @@ ChaonaNext is a platform for connecting sellers, buyers, farmers, and companies 
       lowerInput.includes('recent activity') ||
       lowerInput.includes('shortcuts')
     ) {
-      setMessages(msgs => [
-        ...msgs,
-        {
-          sender: 'buddy',
-          text:
-            "Would you like to go to the Dashboard now? (yes/no)"
-        }
-      ]);
+      setLoading(true);
+      try {
+        const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+        let conversationHistory = SYSTEM_PROMPT + "\n\nConversation History:\n";
+        const previousMessages = messages.slice(1);
+        previousMessages.forEach((msg, index) => {
+          if (msg.sender === 'user') {
+            conversationHistory += `User: ${msg.text}\n`;
+          } else {
+            conversationHistory += `Chaona Buddy: ${msg.text}\n`;
+          }
+        });
+        conversationHistory += `User: ${input}\nChaona Buddy:`;
+        const response = await ai.models.generateContent({
+          model: 'gemini-2.5-flash',
+          contents: [conversationHistory],
+          config: {
+            thinkingConfig: {
+              thinkingBudget: 0,
+            },
+          },
+        });
+        let aiText = response.text || '';
+        aiText += '\n\nWould you like to go to the Dashboard now? (yes/no)';
+        setMessages(msgs => [
+          ...msgs,
+          {
+            sender: 'buddy',
+            text: aiText
+          }
+        ]);
+      } catch (err) {
+        setMessages(msgs => [
+          ...msgs,
+          {
+            sender: 'buddy',
+            text: "Would you like to go to the Dashboard now? (yes/no)"
+          }
+        ]);
+      }
       setPendingIntent('dashboard');
       setInput('');
       setLoading(false);
@@ -248,14 +378,46 @@ ChaonaNext is a platform for connecting sellers, buyers, farmers, and companies 
       lowerInput.includes('contact chaona') ||
       lowerInput.includes('get help')
     ) {
-      setMessages(msgs => [
-        ...msgs,
-        {
-          sender: 'buddy',
-          text:
-            "Would you like to go to Help & Support now? (yes/no)"
-        }
-      ]);
+      setLoading(true);
+      try {
+        const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+        let conversationHistory = SYSTEM_PROMPT + "\n\nConversation History:\n";
+        const previousMessages = messages.slice(1);
+        previousMessages.forEach((msg, index) => {
+          if (msg.sender === 'user') {
+            conversationHistory += `User: ${msg.text}\n`;
+          } else {
+            conversationHistory += `Chaona Buddy: ${msg.text}\n`;
+          }
+        });
+        conversationHistory += `User: ${input}\nChaona Buddy:`;
+        const response = await ai.models.generateContent({
+          model: 'gemini-2.5-flash',
+          contents: [conversationHistory],
+          config: {
+            thinkingConfig: {
+              thinkingBudget: 0,
+            },
+          },
+        });
+        let aiText = response.text || '';
+        aiText += '\n\nWould you like to go to Help & Support now? (yes/no)';
+        setMessages(msgs => [
+          ...msgs,
+          {
+            sender: 'buddy',
+            text: aiText
+          }
+        ]);
+      } catch (err) {
+        setMessages(msgs => [
+          ...msgs,
+          {
+            sender: 'buddy',
+            text: "Would you like to go to Help & Support now? (yes/no)"
+          }
+        ]);
+      }
       setPendingIntent('help');
       setInput('');
       setLoading(false);
@@ -303,14 +465,20 @@ ChaonaNext is a platform for connecting sellers, buyers, farmers, and companies 
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <FontAwesome name="comments" size={28} color="#a5ffc6ff" />
+          <View style={styles.navbarButton}>
+            <Image
+              source={require('../../assets/images/chaona_buddy.jpeg')}
+              style={styles.navbarMascotImage}
+              resizeMode="cover"
+            />
+          </View>
           <Text style={styles.headerText}>Chaona Buddy</Text>
         </View>
         <TouchableOpacity 
-          style={styles.closeButton} 
+          style={{}} 
           onPress={() => router.back()}
         >
-          <FontAwesome name="times" size={24} color="#a5ffc6ff" />
+          <FontAwesome name="times" size={24} color="#fff" />
         </TouchableOpacity>
       </View>
       <ScrollView
@@ -369,6 +537,26 @@ ChaonaNext is a platform for connecting sellers, buyers, farmers, and companies 
 }
 
 const styles = StyleSheet.create({
+  navbarButton: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    overflow: 'hidden',
+    marginRight: 8,
+    marginLeft: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  navbarMascotImage: {
+    width: 94,
+    height: 94,
+    borderRadius: 16,
+  },
   container: {
     flex: 1,
     backgroundColor: '#f0fdf4', // match heroSection bg
@@ -398,11 +586,7 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     letterSpacing: -0.5,
   },
-  closeButton: {
-    padding: 8,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.1)',
-  },
+  // Removed closeButton style for minimal icon-only button
   messages: {
     flex: 1,
     padding: 20,

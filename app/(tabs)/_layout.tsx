@@ -49,14 +49,6 @@ export default function Layout() {
           }}
         />
         <Tabs.Screen
-          name="register"
-          options={{
-            title: 'Register',
-            tabBarIcon: ({ color }) => <TabBarIcon name="user-plus" color={color} />, 
-            headerShown: false,
-          }}
-        />
-        <Tabs.Screen
           name="submit-waste"
           options={{
             title: 'Submit Waste',
