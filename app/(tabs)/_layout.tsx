@@ -35,7 +35,7 @@ export default function Layout() {
         <Tabs.Screen
           name="index"
           options={{
-            title: 'Home',
+            title: '', // Remove title so nothing shows
             tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />, 
             headerShown: false,
           }}

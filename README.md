@@ -4,6 +4,62 @@
 
 ChaonaNext is a cross-platform agricultural waste marketplace application that connects farmers with businesses to transform agricultural waste into valuable products, creating a circular economy that benefits everyone.
 
+---
+
+## 📝 Changelog & Major Updates
+
+### Navigation & Structure
+- Switched to Expo Router for file-based navigation.
+- Tab-based navigation for Home, Dashboard, Marketplace, Profile, Help, Notifications, Settings, Submit Waste.
+- Cleaned up routes and removed references to deleted files for a warning-free project.
+
+### Internationalization
+- Full bilingual support (English/Thai) using i18next and react-i18next.
+- Easy language toggle in navbar and mobile menu.
+
+### UI/UX & Branding
+- Responsive design for mobile and desktop.
+- Two-color logo branding for "ChaonaNext" (Chaona green, Next black/blue).
+- Modern navbar with logo, language selector, and navigation links.
+- Hamburger menu for mobile navigation.
+- Consistent card layouts and touch-friendly interface.
+
+### Marketplace & E-commerce
+- Marketplace tab for browsing, buying, and selling agricultural products.
+- Product cards with real images, pricing, seller info, and conditions.
+- Search and filter by category and keywords.
+
+### Waste Submission
+- Submit Waste tab and form for agricultural waste recycling/disposal.
+- Step-by-step instructions and confirmation prompts via AI chat.
+
+### AI Chat Bot ("Chaona Buddy")
+- Integrated Gemini API (REST and official SDK) for AI chat.
+- Secure API key management via `.env` (never committed to repo).
+- System prompt with rules, app features, and example Q&A for contextual, bilingual, agricultural expertise.
+- Chat history context for smarter AI responses.
+- Floating AI chat button with mascot image, arc text, and close button.
+- Help & Support page links to live AI chat.
+
+### Security & Best Practices
+- Removed `.env` from repo and added to `.gitignore`.
+- No API keys exposed in public codebase.
+
+### Visuals & Assets
+- Mascot image (`chaona_buddy.jpeg`) used in floating button and chat navbar.
+- All images stored in `assets/images/`.
+
+### Component Improvements
+- Refactored floating button and navbar AI button for consistent mascot display and centering.
+- Improved button positioning to avoid footer overlap.
+- Clean, minimal close button in chat page.
+
+### Project Cleanup
+- Removed unnecessary files, code, and route references.
+- Updated type definitions and router config for only existing routes.
+
+---
+
 ## 🚀 Live Demo
 
 - **Web Version**: Coming soon (Will be deployed to Netlify/Vercel)
@@ -131,25 +187,44 @@ The app supports multiple languages using i18next:
 
 ```
 chaona-next/
-├── app/                          # App screens and navigation
-│   ├── (tabs)/                   # Tab-based navigation
-│   │   ├── _layout.tsx          # Tab layout configuration
-│   │   └── index.tsx            # Home screen
-│   ├── _layout.tsx              # Root layout
-│   └── +not-found.tsx          # 404 page
-├── assets/                       # Images, fonts, and static assets
+├── app/                          # Main app screens and navigation
+│   ├── (tabs)/                   # Tab-based navigation (Home, Dashboard, Marketplace, Profile, Help, etc.)
+│   │   ├── chaona_buddy.tsx      # AI chat bot page (mascot image, chat UI)
+│   │   ├── marketplace.tsx       # Marketplace screen
+│   │   ├── submit-waste.tsx      # Waste submission form
+│   │   ├── profile.tsx           # User profile
+│   │   ├── dashboard.tsx         # Dashboard/analytics
+│   │   ├── login.tsx             # Login screen
+│   │   ├── register.tsx          # Registration screen
+│   │   ├── settings.tsx          # Settings page
+│   │   ├── notifications.tsx     # Notifications page
+│   │   ├── index.tsx             # Home screen
+│   │   ├── _layout.tsx           # Tab layout configuration
+│   │   └── index-minimal.tsx     # Minimal home screen (optional)
+│   ├── _layout.tsx               # Root layout
+│   └── +not-found.tsx            # 404 page
+├── assets/
+│   └── images/
+│       └── chaona_buddy.jpeg     # Mascot image and other static assets
 ├── components/                   # Reusable UI components
-│   ├── LanguageSelector/        # Language selection component
-│   ├── Themed.tsx              # Theme-aware components
-│   └── useColorScheme.*        # Color scheme utilities
-├── constants/                    # App constants and configurations
-│   └── Colors.ts               # Color definitions
-├── i18n/                        # Internationalization setup
-│   └── index.ts                # i18next configuration
-├── locales/                     # Translation files
-│   ├── en.json                 # English translations
-│   └── th.json                 # Thai translations
-└── package.json                # Dependencies and scripts
+│   ├── NavbarAIButton.tsx        # AI chat button in navbar
+│   ├── AIFloatButton.tsx         # Floating AI chat button
+│   ├── DemoFooter.tsx            # Demo footer component
+│   ├── ProfileContent/           # Profile content components
+│   ├── NotificationBell/         # Notification bell component
+│   ├── LanguageSelector/         # Language selection dropdown
+│   └── Themed.tsx                # Theme-aware components
+├── constants/
+│   └── Colors.ts                 # Color definitions
+├── contexts/                     # React context providers (if any)
+├── i18n/
+│   └── index.ts                  # i18next configuration
+├── locales/
+│   ├── en.json                   # English translations
+│   └── th.json                   # Thai translations
+├── .env                          # API keys and secrets (gitignored)
+├── .gitignore                    # Ignore sensitive files
+└── package.json                  # Dependencies and scripts
 ```
 
 ## 🛠️ Technologies Used

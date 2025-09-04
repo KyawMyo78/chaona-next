@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform, Pressable, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform, Pressable, ScrollView, Image } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Link, useRouter } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -26,8 +26,15 @@ const Navbar: React.FC<NavbarProps> = ({ isLargeScreen, activeTab = 'home' }) =>
     <>
       <View style={[styles.navbar, isLargeScreen && styles.navbarLarge]}>
         <View style={styles.navContainer}>
-          {/* Logo */}
-          <TouchableOpacity onPress={() => router.push('./')}>
+          {/* Logo and Name */}
+          <TouchableOpacity onPress={() => router.push('./')} style={styles.logoContainer}>
+            <View style={styles.logoImageContainer}>
+              <Image
+                source={require('@/assets/images/chaona_logo.jpeg')}
+                style={styles.logoImage}
+                resizeMode="cover"
+              />
+            </View>
             <Text style={[styles.navLogo, isLargeScreen && styles.navLogoLarge]}>
               ChaonaNext
             </Text>
@@ -318,6 +325,26 @@ const Navbar: React.FC<NavbarProps> = ({ isLargeScreen, activeTab = 'home' }) =>
 };
 
 const styles = StyleSheet.create({
+  logoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  logoImageContainer: {
+    height: 38, // match navLogo fontSize
+    width: 38,
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+    marginRight: 4,
+  },
+  logoImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 8,
+    transform: [{ scale: 1.4 }],
+    
+  },
   navbar: {
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
     paddingHorizontal: 16,
